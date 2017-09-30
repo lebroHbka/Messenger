@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MessagesService.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SecretKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">oQzY2X3xVUU3PBUxAOm2l2n/UDcBnOGnYg39TbxwjUCexqSLGqz+zKuAF8hmJpvyvhBEv1p6WcSjbe1NBq1twg==</Value>
+    </Setting>
+    <Setting Name="BDPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">App_Data\UsersInfo.db</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

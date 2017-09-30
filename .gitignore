@@ -1,0 +1,10 @@
+﻿.vs/
+packages/
+DesktopClient/bin
+DesktopClient/obj
+Test/
+TokenService/bin
+TokenService/obj
+TokenService/Properties/PublishProfiles
+TokenService/Web.Debug.config
+TokenService/Web.Release.config
