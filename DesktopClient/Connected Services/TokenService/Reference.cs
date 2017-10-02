@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Client.TokenService {
+namespace DesktopClient.TokenService {
     using System.Runtime.Serialization;
     using System;
     
@@ -124,25 +124,25 @@ namespace Client.TokenService {
     public interface IUserService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/LogIn", ReplyAction="http://tempuri.org/IUserService/LogInResponse")]
-        Client.TokenService.Token LogIn();
+        DesktopClient.TokenService.Token LogIn();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/LogIn", ReplyAction="http://tempuri.org/IUserService/LogInResponse")]
-        System.Threading.Tasks.Task<Client.TokenService.Token> LogInAsync();
+        System.Threading.Tasks.Task<DesktopClient.TokenService.Token> LogInAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SignUp", ReplyAction="http://tempuri.org/IUserService/SignUpResponse")]
-        Client.TokenService.Token SignUp(Client.TokenService.User info);
+        DesktopClient.TokenService.Token SignUp(DesktopClient.TokenService.User info);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserService/SignUp", ReplyAction="http://tempuri.org/IUserService/SignUpResponse")]
-        System.Threading.Tasks.Task<Client.TokenService.Token> SignUpAsync(Client.TokenService.User info);
+        System.Threading.Tasks.Task<DesktopClient.TokenService.Token> SignUpAsync(DesktopClient.TokenService.User info);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IUserServiceChannel : Client.TokenService.IUserService, System.ServiceModel.IClientChannel {
+    public interface IUserServiceChannel : DesktopClient.TokenService.IUserService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class UserServiceClient : System.ServiceModel.ClientBase<Client.TokenService.IUserService>, Client.TokenService.IUserService {
+    public partial class UserServiceClient : System.ServiceModel.ClientBase<DesktopClient.TokenService.IUserService>, DesktopClient.TokenService.IUserService {
         
         public UserServiceClient() {
         }
@@ -163,19 +163,19 @@ namespace Client.TokenService {
                 base(binding, remoteAddress) {
         }
         
-        public Client.TokenService.Token LogIn() {
+        public DesktopClient.TokenService.Token LogIn() {
             return base.Channel.LogIn();
         }
         
-        public System.Threading.Tasks.Task<Client.TokenService.Token> LogInAsync() {
+        public System.Threading.Tasks.Task<DesktopClient.TokenService.Token> LogInAsync() {
             return base.Channel.LogInAsync();
         }
         
-        public Client.TokenService.Token SignUp(Client.TokenService.User info) {
+        public DesktopClient.TokenService.Token SignUp(DesktopClient.TokenService.User info) {
             return base.Channel.SignUp(info);
         }
         
-        public System.Threading.Tasks.Task<Client.TokenService.Token> SignUpAsync(Client.TokenService.User info) {
+        public System.Threading.Tasks.Task<DesktopClient.TokenService.Token> SignUpAsync(DesktopClient.TokenService.User info) {
             return base.Channel.SignUpAsync(info);
         }
     }

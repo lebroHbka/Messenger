@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Client
+namespace DesktopClient
 {
     public partial class RegistrationForm : Form
     {

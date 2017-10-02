@@ -1,4 +1,4 @@
-﻿namespace Client
+﻿namespace DesktopClient
 {
     partial class RegistrationForm
     {
@@ -85,6 +85,7 @@
             this.LogInButton.Name = "LogInButton";
             this.LogInButton.Size = new System.Drawing.Size(220, 40);
             this.LogInButton.TabIndex = 2;
+            this.LogInButton.TabStop = false;
             this.LogInButton.Text = "LogIn";
             this.LogInButton.UseVisualStyleBackColor = false;
             this.LogInButton.Click += new System.EventHandler(this.AuthenticationLogInButton_Click);
@@ -212,6 +213,7 @@
             this.SignUpTab.Name = "SignUpTab";
             this.SignUpTab.Size = new System.Drawing.Size(134, 41);
             this.SignUpTab.TabIndex = 0;
+            this.SignUpTab.TabStop = false;
             this.SignUpTab.Text = "SignUp";
             this.SignUpTab.UseVisualStyleBackColor = false;
             this.SignUpTab.Click += new System.EventHandler(this.AuthenticationSignUpTab_Click);
@@ -233,6 +235,7 @@
             this.LogInTab.Name = "LogInTab";
             this.LogInTab.Size = new System.Drawing.Size(134, 41);
             this.LogInTab.TabIndex = 0;
+            this.LogInTab.TabStop = false;
             this.LogInTab.Text = "LogIn";
             this.LogInTab.UseMnemonic = false;
             this.LogInTab.UseVisualStyleBackColor = false;

@@ -1,4 +1,4 @@
-﻿namespace Client
+﻿namespace DesktopClient
 {
     partial class MainForm
     {
@@ -36,15 +36,17 @@
             this.sideBarProfile = new System.Windows.Forms.PictureBox();
             this.ProfilePanel = new System.Windows.Forms.Panel();
             this.ProfilepanelLoginLabel = new System.Windows.Forms.Label();
-            this.ProfilePanelSignUpButton = new System.Windows.Forms.Button();
-            this.ProfilePanelLogInButton = new System.Windows.Forms.Button();
             this.ProfilepanelAvatarPic = new System.Windows.Forms.PictureBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.FormHeader = new System.Windows.Forms.Panel();
             this.HeaderExitButton = new System.Windows.Forms.PictureBox();
             this.Timer = new System.Windows.Forms.Timer(this.components);
             this.FriendsPanel = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.FriendsListPanel = new System.Windows.Forms.Panel();
+            this.Scroll = new System.Windows.Forms.Panel();
+            this.AddFriendPanel = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.AddFriendName = new System.Windows.Forms.RichTextBox();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.welcomePanel = new System.Windows.Forms.Panel();
             this.welcomePicture = new System.Windows.Forms.PictureBox();
@@ -58,6 +60,9 @@
             this.FormHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderExitButton)).BeginInit();
             this.FriendsPanel.SuspendLayout();
+            this.FriendsListPanel.SuspendLayout();
+            this.AddFriendPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.welcomePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).BeginInit();
             this.SuspendLayout();
@@ -78,7 +83,7 @@
             // sideBarSettings
             // 
             this.sideBarSettings.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sideBarSettings.Image = global::Client.Properties.Resources.sideBarMenuSettings;
+            this.sideBarSettings.Image = global::DesktopClient.Properties.Resources.sideBarMenuSettings;
             this.sideBarSettings.Location = new System.Drawing.Point(2, 170);
             this.sideBarSettings.Name = "sideBarSettings";
             this.sideBarSettings.Size = new System.Drawing.Size(36, 36);
@@ -91,7 +96,7 @@
             // sideBarFriends
             // 
             this.sideBarFriends.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sideBarFriends.Image = global::Client.Properties.Resources.sideBarMenuFriends;
+            this.sideBarFriends.Image = global::DesktopClient.Properties.Resources.sideBarMenuFriends;
             this.sideBarFriends.Location = new System.Drawing.Point(2, 110);
             this.sideBarFriends.Name = "sideBarFriends";
             this.sideBarFriends.Size = new System.Drawing.Size(36, 36);
@@ -105,7 +110,7 @@
             // sideBarProfile
             // 
             this.sideBarProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sideBarProfile.Image = global::Client.Properties.Resources.sideBarMenuProfile;
+            this.sideBarProfile.Image = global::DesktopClient.Properties.Resources.sideBarMenuProfile;
             this.sideBarProfile.Location = new System.Drawing.Point(2, 50);
             this.sideBarProfile.Name = "sideBarProfile";
             this.sideBarProfile.Size = new System.Drawing.Size(36, 36);
@@ -120,15 +125,13 @@
             // 
             this.ProfilePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
             this.ProfilePanel.Controls.Add(this.ProfilepanelLoginLabel);
-            this.ProfilePanel.Controls.Add(this.ProfilePanelSignUpButton);
-            this.ProfilePanel.Controls.Add(this.ProfilePanelLogInButton);
             this.ProfilePanel.Controls.Add(this.ProfilepanelAvatarPic);
             this.ProfilePanel.Controls.Add(this.splitter1);
             this.ProfilePanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.ProfilePanel.Location = new System.Drawing.Point(40, 0);
             this.ProfilePanel.Margin = new System.Windows.Forms.Padding(0);
             this.ProfilePanel.Name = "ProfilePanel";
-            this.ProfilePanel.Size = new System.Drawing.Size(161, 400);
+            this.ProfilePanel.Size = new System.Drawing.Size(0, 400);
             this.ProfilePanel.TabIndex = 1;
             this.ProfilePanel.Visible = false;
             // 
@@ -144,35 +147,9 @@
             this.ProfilepanelLoginLabel.Text = "Anonymous";
             this.ProfilepanelLoginLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ProfilePanelSignUpButton
-            // 
-            this.ProfilePanelSignUpButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
-            this.ProfilePanelSignUpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ProfilePanelSignUpButton.Font = new System.Drawing.Font("Microsoft YaHei UI Light", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ProfilePanelSignUpButton.Location = new System.Drawing.Point(30, 269);
-            this.ProfilePanelSignUpButton.Name = "ProfilePanelSignUpButton";
-            this.ProfilePanelSignUpButton.Size = new System.Drawing.Size(100, 40);
-            this.ProfilePanelSignUpButton.TabIndex = 2;
-            this.ProfilePanelSignUpButton.Text = "SignUp";
-            this.ProfilePanelSignUpButton.UseVisualStyleBackColor = true;
-            this.ProfilePanelSignUpButton.Click += new System.EventHandler(this.ProfilePanelSignUpButton_Click);
-            // 
-            // ProfilePanelLogInButton
-            // 
-            this.ProfilePanelLogInButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
-            this.ProfilePanelLogInButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ProfilePanelLogInButton.Font = new System.Drawing.Font("Microsoft YaHei UI Light", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ProfilePanelLogInButton.Location = new System.Drawing.Point(30, 200);
-            this.ProfilePanelLogInButton.Name = "ProfilePanelLogInButton";
-            this.ProfilePanelLogInButton.Size = new System.Drawing.Size(100, 40);
-            this.ProfilePanelLogInButton.TabIndex = 2;
-            this.ProfilePanelLogInButton.Text = "LogIn";
-            this.ProfilePanelLogInButton.UseVisualStyleBackColor = true;
-            this.ProfilePanelLogInButton.Click += new System.EventHandler(this.ProfilePanelLogInButton_Click);
-            // 
             // ProfilepanelAvatarPic
             // 
-            this.ProfilepanelAvatarPic.Image = global::Client.Properties.Resources.anonym;
+            this.ProfilepanelAvatarPic.Image = global::DesktopClient.Properties.Resources.anonym;
             this.ProfilepanelAvatarPic.Location = new System.Drawing.Point(40, 50);
             this.ProfilepanelAvatarPic.Name = "ProfilepanelAvatarPic";
             this.ProfilepanelAvatarPic.Size = new System.Drawing.Size(80, 80);
@@ -196,10 +173,10 @@
             // 
             this.FormHeader.Controls.Add(this.HeaderExitButton);
             this.FormHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.FormHeader.Location = new System.Drawing.Point(203, 0);
+            this.FormHeader.Location = new System.Drawing.Point(200, 0);
             this.FormHeader.Margin = new System.Windows.Forms.Padding(0);
             this.FormHeader.Name = "FormHeader";
-            this.FormHeader.Size = new System.Drawing.Size(397, 50);
+            this.FormHeader.Size = new System.Drawing.Size(400, 50);
             this.FormHeader.TabIndex = 2;
             this.FormHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseDown);
             this.FormHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseMove);
@@ -208,8 +185,8 @@
             // 
             this.HeaderExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderExitButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.HeaderExitButton.Image = global::Client.Properties.Resources.ExitButton;
-            this.HeaderExitButton.Location = new System.Drawing.Point(355, 10);
+            this.HeaderExitButton.Image = global::DesktopClient.Properties.Resources.ExitButton;
+            this.HeaderExitButton.Location = new System.Drawing.Point(358, 10);
             this.HeaderExitButton.Name = "HeaderExitButton";
             this.HeaderExitButton.Size = new System.Drawing.Size(30, 30);
             this.HeaderExitButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -226,25 +203,79 @@
             // FriendsPanel
             // 
             this.FriendsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
-            this.FriendsPanel.Controls.Add(this.label2);
+            this.FriendsPanel.Controls.Add(this.FriendsListPanel);
+            this.FriendsPanel.Controls.Add(this.AddFriendPanel);
             this.FriendsPanel.Controls.Add(this.splitter2);
             this.FriendsPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.FriendsPanel.Location = new System.Drawing.Point(201, 0);
+            this.FriendsPanel.Location = new System.Drawing.Point(40, 0);
             this.FriendsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.FriendsPanel.Name = "FriendsPanel";
-            this.FriendsPanel.Size = new System.Drawing.Size(2, 400);
+            this.FriendsPanel.Size = new System.Drawing.Size(160, 400);
             this.FriendsPanel.TabIndex = 4;
             this.FriendsPanel.Visible = false;
             // 
-            // label2
+            // FriendsListPanel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(3, 147);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(156, 50);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "        LogIn\r\nto see friends list";
+            this.FriendsListPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
+            this.FriendsListPanel.Controls.Add(this.Scroll);
+            this.FriendsListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FriendsListPanel.Location = new System.Drawing.Point(2, 27);
+            this.FriendsListPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.FriendsListPanel.Name = "FriendsListPanel";
+            this.FriendsListPanel.Size = new System.Drawing.Size(158, 373);
+            this.FriendsListPanel.TabIndex = 1;
+            // 
+            // Scroll
+            // 
+            this.Scroll.BackColor = System.Drawing.Color.Transparent;
+            this.Scroll.Location = new System.Drawing.Point(150, 0);
+            this.Scroll.Margin = new System.Windows.Forms.Padding(0);
+            this.Scroll.Name = "Scroll";
+            this.Scroll.Size = new System.Drawing.Size(8, 100);
+            this.Scroll.TabIndex = 0;
+            this.Scroll.Paint += new System.Windows.Forms.PaintEventHandler(this.Scroll_Paint);
+            // 
+            // AddFriendPanel
+            // 
+            this.AddFriendPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(27)))), ((int)(((byte)(33)))));
+            this.AddFriendPanel.Controls.Add(this.pictureBox1);
+            this.AddFriendPanel.Controls.Add(this.AddFriendName);
+            this.AddFriendPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.AddFriendPanel.Location = new System.Drawing.Point(2, 0);
+            this.AddFriendPanel.Name = "AddFriendPanel";
+            this.AddFriendPanel.Size = new System.Drawing.Size(158, 27);
+            this.AddFriendPanel.TabIndex = 2;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(131, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabStop = false;
+            // 
+            // AddFriendName
+            // 
+            this.AddFriendName.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.AddFriendName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(27)))), ((int)(((byte)(33)))));
+            this.AddFriendName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.AddFriendName.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.AddFriendName.DetectUrls = false;
+            this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AddFriendName.ForeColor = System.Drawing.Color.White;
+            this.AddFriendName.Location = new System.Drawing.Point(7, 0);
+            this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
+            this.AddFriendName.MaxLength = 10;
+            this.AddFriendName.Multiline = false;
+            this.AddFriendName.Name = "AddFriendName";
+            this.AddFriendName.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.AddFriendName.Size = new System.Drawing.Size(124, 27);
+            this.AddFriendName.TabIndex = 1;
+            this.AddFriendName.Text = "";
             // 
             // splitter2
             // 
@@ -264,17 +295,17 @@
             this.welcomePanel.Controls.Add(this.welcomePicture);
             this.welcomePanel.Controls.Add(this.welcomeLabel);
             this.welcomePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.welcomePanel.Location = new System.Drawing.Point(203, 50);
+            this.welcomePanel.Location = new System.Drawing.Point(200, 50);
             this.welcomePanel.Margin = new System.Windows.Forms.Padding(0);
             this.welcomePanel.Name = "welcomePanel";
-            this.welcomePanel.Size = new System.Drawing.Size(397, 350);
+            this.welcomePanel.Size = new System.Drawing.Size(400, 350);
             this.welcomePanel.TabIndex = 3;
             // 
             // welcomePicture
             // 
             this.welcomePicture.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.welcomePicture.Image = global::Client.Properties.Resources.Logo;
-            this.welcomePicture.Location = new System.Drawing.Point(134, 90);
+            this.welcomePicture.Image = global::DesktopClient.Properties.Resources.Logo;
+            this.welcomePicture.Location = new System.Drawing.Point(136, 90);
             this.welcomePicture.Name = "welcomePicture";
             this.welcomePicture.Size = new System.Drawing.Size(100, 100);
             this.welcomePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -286,7 +317,7 @@
             this.welcomeLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.welcomeLabel.AutoSize = true;
             this.welcomeLabel.Font = new System.Drawing.Font("Microsoft YaHei Light", 23F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.welcomeLabel.Location = new System.Drawing.Point(22, 193);
+            this.welcomeLabel.Location = new System.Drawing.Point(24, 193);
             this.welcomeLabel.Name = "welcomeLabel";
             this.welcomeLabel.Size = new System.Drawing.Size(347, 40);
             this.welcomeLabel.TabIndex = 0;
@@ -319,7 +350,9 @@
             this.FormHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.HeaderExitButton)).EndInit();
             this.FriendsPanel.ResumeLayout(false);
-            this.FriendsPanel.PerformLayout();
+            this.FriendsListPanel.ResumeLayout(false);
+            this.AddFriendPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.welcomePanel.ResumeLayout(false);
             this.welcomePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).EndInit();
@@ -338,16 +371,18 @@
         private System.Windows.Forms.PictureBox sideBarFriends;
         private System.Windows.Forms.PictureBox sideBarProfile;
         private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.Button ProfilePanelLogInButton;
         private System.Windows.Forms.PictureBox ProfilepanelAvatarPic;
-        private System.Windows.Forms.Button ProfilePanelSignUpButton;
         private System.Windows.Forms.Label ProfilepanelLoginLabel;
         private System.Windows.Forms.Panel FriendsPanel;
         private System.Windows.Forms.Splitter splitter2;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel welcomePanel;
         private System.Windows.Forms.PictureBox welcomePicture;
         private System.Windows.Forms.Label welcomeLabel;
+        private System.Windows.Forms.Panel FriendsListPanel;
+        private System.Windows.Forms.Panel Scroll;
+        private System.Windows.Forms.RichTextBox AddFriendName;
+        private System.Windows.Forms.Panel AddFriendPanel;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

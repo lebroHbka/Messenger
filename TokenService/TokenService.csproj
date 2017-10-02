@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="index.html" />
     <Content Include="UserService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
