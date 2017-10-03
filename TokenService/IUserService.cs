@@ -20,11 +20,25 @@ namespace MessagesService
 
         [OperationContract]
         [WebInvoke(Method = "POST",
-                   UriTemplate = "user/signup",
+                   UriTemplate = "/user/signup",
                    RequestFormat = WebMessageFormat.Json,
                    ResponseFormat = WebMessageFormat.Json,
                    BodyStyle = WebMessageBodyStyle.Bare)]
         Token SignUp(User info);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/user/addfriend={name}",
+                RequestFormat = WebMessageFormat.Json,
+                ResponseFormat = WebMessageFormat.Json,
+                BodyStyle = WebMessageBodyStyle.Bare)]
+        bool AddFriend(string name);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/user/friendslist", 
+                RequestFormat = WebMessageFormat.Json,
+                ResponseFormat = WebMessageFormat.Json,
+                BodyStyle = WebMessageBodyStyle.Bare)]
+        List<string> GetFriends();
     }
 
     [DataContract]
@@ -45,4 +59,14 @@ namespace MessagesService
         [DataMember]
         public string Password { get; set; }
     }
+
+    [Table("Friends")]
+    public class Friends
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Friend1_login { get; set; }
+        public string Friend2_login { get; set; }
+    }
+
 }

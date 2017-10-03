@@ -75,6 +75,13 @@ namespace DesktopClient
             FixScroll();
         }
 
+        public void Clear()
+        {
+            mainPanel.Controls.Clear();
+            elements.Clear();
+            scrollPos = 0;
+            elementsHight = 0;
+        }
 
 
         private int ElementsTotalHeight()

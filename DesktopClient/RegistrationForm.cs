@@ -34,6 +34,9 @@ namespace DesktopClient
 
         Point windowPosition;
 
+        int authentNotificDelay = 1300;
+        bool isLogInButtEnabled = true;
+        bool isRegistrButtEnabled = true;
 
         public RegistrationForm()
         {
@@ -166,27 +169,26 @@ namespace DesktopClient
             // with correct border color can represent status of authentication,
             // after delayTime main panel again make previos color.
             // all this for prevent flickering while render border
-            var count = delayTime / Timer.Interval;
+            
             authStatus = status;
             StatusPanel.Refresh();
             MainPanel.BackColor = Color.Transparent;
             StatusPanel.Visible = true;
-            
+
+            Timer.Interval = delayTime;
             Timer.Tick += (object obj, EventArgs args) =>
             {
-                count--;
-                if (count == 0)
+                StatusPanel.Visible = false;
+                MainPanel.BackColor = bgColor;
+                Timer.Stop();
+                Timer = new Timer();
+                if (closeAfter)
                 {
-                    StatusPanel.Visible = false;
-                    MainPanel.BackColor = bgColor;
-                    Timer.Stop();
-                    Timer = new Timer();
-                    if (closeAfter)
-                    {
-                        Close();
-                        Dispose();
-                    }
+                    // close form
+                    this.Dispose();
                 }
+                isLogInButtEnabled = true;
+                isRegistrButtEnabled = true;
             };
             Timer.Start();
         }
@@ -211,18 +213,22 @@ namespace DesktopClient
         
         #region Signin panel
 
-        private async void AuthenticationLogInButton_Click(object sender, EventArgs e)
+        private async void LogInButton_Click(object sender, EventArgs e)
         {
-            string login = UserLoginField.Text;
-            string password = UserPassField.Text;
+            if (isLogInButtEnabled)
+            {
+                isLogInButtEnabled = false;
+                string login = UserLoginField.Text;
+                string password = UserPassField.Text;
 
-            if (await MainForm.AuthenticateUser(login, password))
-            {
-                AuthenticationNotification(AuthenticationStatus.Ok, 1500, true);
-            }
-            else
-            {
-                AuthenticationNotification(AuthenticationStatus.Fail, 1500, false);
+                if (await MainForm.LogInUser(login, password))
+                {
+                    AuthenticationNotification(AuthenticationStatus.Ok, authentNotificDelay, true);
+                }
+                else
+                {
+                    AuthenticationNotification(AuthenticationStatus.Fail, authentNotificDelay, false);
+                }
             }
         }
 
@@ -235,18 +241,22 @@ namespace DesktopClient
 
         #region SignUp panel
 
-        private async void SignInRegistrationButton_Click(object sender, EventArgs e)
+        private async void RegistrationButton_Click(object sender, EventArgs e)
         {
-            string login = UserLoginField.Text;
-            string password = UserPassField.Text;
+            if (isRegistrButtEnabled)
+            {
+                isRegistrButtEnabled = false;
+                string login = UserLoginField.Text;
+                string password = UserPassField.Text;
 
-            if (await MainForm.RegisterUser(login, password))
-            {
-                AuthenticationNotification(AuthenticationStatus.Ok, 1500, true);
-            }
-            else
-            {
-                AuthenticationNotification(AuthenticationStatus.Fail, 1500, false);
+                if (await MainForm.RegisterUser(login, password))
+                {
+                    AuthenticationNotification(AuthenticationStatus.Ok, authentNotificDelay, true);
+                }
+                else
+                {
+                    AuthenticationNotification(AuthenticationStatus.Fail, authentNotificDelay, false);
+                }
             }
         }
 

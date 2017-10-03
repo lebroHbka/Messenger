@@ -18,20 +18,30 @@ namespace DesktopClient
     {
         enum Status
         {
-            Anonymous = 0,
+            Default = 0,
+            Anonymous = 1,
+            Logined = 2
         }
-        Dictionary<Status, string> statuses = new Dictionary<Status, string>
-        {
-            { Status.Anonymous, "Anonymous"},
-        };
 
-        string login;
-        string password;
-        string token;
+        #region Vars
 
-        Point windowPosition;
-        int menuNormalWidth = 160;
-        int menuToggleSpeed = 50;
+        const string userAddedSuccess = "User added";
+        const string userAddedFail = "No such user";
+        const string userAddedYourSelf = "Can't add yourself";
+        const string userAddedFriendExists = "User already exists";
+
+        #region User info
+
+        string userLogin;
+        string userPassword;
+        string userToken;
+
+        Status userStatus = Status.Default;
+        List<string> userFriends = new List<string>();
+
+        #endregion
+
+        #region Colors
 
         Color activeSideBarButtonColor = Color.FromArgb(20, 23, 28);
         Color transparentColor = Color.Transparent;
@@ -40,21 +50,43 @@ namespace DesktopClient
         Color FriendPanelNotHovered = Color.Transparent;
 
         Color ScrollColor = Color.FromArgb(255, 22, 25, 30);
+
+
+        Color userAddedSuccessColor = Color.FromArgb(255, 6, 96, 11);
+        Color userAddedFailColor = Color.FromArgb(255, 122, 17, 17);
+
+        Color profilePanelButtonPress = Color.FromArgb(255, 152, 204, 253);
+
+        #endregion
+
+        Point windowPosition;
+        int menuNormalWidth = 170;
+        int menuToggleSpeed = 50;
+
+        int userAddFriendNotifDelay = 1500;
+
         CustomScrollBar custScroll;
 
         Dictionary<PictureBox, Panel> activeSideBar = new Dictionary<PictureBox, Panel>();
 
+        Dictionary<Status, string> statuses = new Dictionary<Status, string>
+        {
+            { Status.Anonymous, "Anonymous"},
+        };
+
+
+        #endregion
+
+
         public MainForm()
         {
             InitializeComponent();
+            custScroll = new CustomScrollBar(FriendsListPanel, Scroll, 3);
+
             StartUserSettings();
             ControlsSettings();
 
-            custScroll = new CustomScrollBar(FriendsListPanel, Scroll, 3);
-            for (int i = 0; i < 15; i++)
-            {
-                AddNewFriend(i.ToString());
-            }
+            
         }
 
         private void ControlsSettings()
@@ -64,15 +96,23 @@ namespace DesktopClient
 
             FriendsPanel.Width = 0;
             FriendsPanel.Visible = false;
+
+            // profile panel
+            ProfilepanelAvatarPic.Left = (menuNormalWidth - ProfilepanelAvatarPic.Width) / 2;
         }
 
 
 
         #region Custom scroll
         
-        private void AddNewFriend(string name)
+        private void FriendsListAddNewPanel(string name)
         {
             custScroll.AddNewItem(CreatePanel(name));
+        }
+
+        private void FriendsListClear()
+        {
+            custScroll.Clear();
         }
 
         private Panel CreatePanel(string name)
@@ -85,7 +125,7 @@ namespace DesktopClient
             p.Name = $"{name}_friendPanel";
             p.Controls.Add(picBox);
             p.Controls.Add(but);
-            p.Size = new Size(160, 50);
+            p.Size = new Size(menuNormalWidth, 50);
             p.TabStop = false;
 
             // custom pic
@@ -103,7 +143,7 @@ namespace DesktopClient
             but.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
             but.Location = new Point(56, 0);
             but.Margin = new Padding(0);
-            but.Size = new Size(104, 50);
+            but.Size = new Size(114, 50);
             but.Text = name;
             but.UseVisualStyleBackColor = true;
             but.MouseLeave += (object sender, EventArgs e) => { but.Parent.BackColor = FriendPanelNotHovered; };
@@ -134,7 +174,6 @@ namespace DesktopClient
         }
         
         #endregion
-
 
 
         #region Exit button
@@ -177,37 +216,37 @@ namespace DesktopClient
 
         private void Close(Panel p)
         {
-            Timer.Tick += (object s, EventArgs el) =>
+            SideBarCloseTimer.Tick += (object s, EventArgs el) =>
             {
                 p.Width -= menuToggleSpeed;
                 if (p.Width <= 0)
                 {
-                    Timer.Stop();
-                    Timer = new Timer();
+                    SideBarCloseTimer.Stop();
+                    SideBarCloseTimer = new Timer();
                     p.Width = 0;
                     p.Visible = false;
                     Refresh();
                 }
             };
-            Timer.Start();
+            SideBarCloseTimer.Start();
         }
 
         private void Open(Panel p)
         {
-            Timer.Tick += (object s, EventArgs el) =>
+            SideBarCloseTimer.Tick += (object s, EventArgs el) =>
             {
                 p.Width += menuToggleSpeed;
                 if (p.Width >= menuNormalWidth)
                 {
-                    Timer.Stop();
-                    Timer = new Timer();
+                    SideBarCloseTimer.Stop();
+                    SideBarCloseTimer = new Timer();
                     p.Width = menuNormalWidth;
                     Refresh();
                 }
             };
 
             p.Visible = true;
-            Timer.Start();
+            SideBarCloseTimer.Start();
         }
 
         private void ToggleSideBarMenuButton(PictureBox button, Panel p)
@@ -239,7 +278,6 @@ namespace DesktopClient
                     // slow open new panel
                     Open(p);
                 }
-
 
                 button.BackColor = activeSideBarButtonColor;
                 activeSideBar[button] = p;
@@ -280,7 +318,6 @@ namespace DesktopClient
         private void ProfilePanelStatusUnlogin()
         {
             ProfilePanel.Controls.Find("ProfilePanelLogOutButton", false).FirstOrDefault()?.Dispose();
-
             Generate_LogInButton();
             Generate_SignUpButton();
             ProfilePanel.Refresh();
@@ -319,6 +356,8 @@ namespace DesktopClient
             FriendsListPanel.Visible = false;
             AddFriendPanel.Visible = false;
             Generate_LoginToSeeFriendsLabel();
+            FriendsListClear();
+            AddFriendName.Text = "";
         }
 
         private void FriendsPanelStatusLogined()
@@ -328,6 +367,50 @@ namespace DesktopClient
             AddFriendPanel.Visible = true;
         }
 
+        private async void AddFriendName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                if(AddFriendName.Text.Length > 0)
+                {
+                    AddFriendStatusTimer_Tick(sender, e);
+                    AddFriendStatusTimer.Interval = userAddFriendNotifDelay;
+
+                    var friendName = AddFriendName.Text;
+                    if (friendName == userLogin)
+                    {
+                        AddFriendStatusTimer.Start();
+                        Generate_AddFriendStatus(userAddedFailColor, userAddedYourSelf);
+                    }
+                    else if (userFriends.Contains(friendName))
+                    {
+                        AddFriendStatusTimer.Start();
+                        Generate_AddFriendStatus(userAddedFailColor, userAddedFriendExists);
+                    }
+                    else if (await AddFriend(friendName))
+                    {
+                        AddFriendStatusTimer.Start();
+                        Generate_AddFriendStatus(userAddedSuccessColor, userAddedSuccess);
+
+                        FriendsListAddNewPanel(friendName);
+                    }
+                    else
+                    {
+                        AddFriendStatusTimer.Start();
+                        Generate_AddFriendStatus(userAddedFailColor, userAddedFail);
+                    }
+                }
+                Scroll.Invalidate();
+            }
+        }
+
+        private void AddFriendStatusTimer_Tick(object sender, EventArgs e)
+        {
+            FriendsListPanel.Controls.Find("AddFriendStatusPanel", false).FirstOrDefault()?.Dispose();
+            Scroll.Invalidate();
+            AddFriendStatusTimer.Stop();
+        }
 
         #endregion
 
@@ -338,13 +421,13 @@ namespace DesktopClient
         private void Generate_LogOutButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
-            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            but.Location = new Point(30, 200);
-            but.Name = "ProfilePanelLogOutButton";
             but.Size = new Size(100, 40);
+            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            but.Location = new Point((menuNormalWidth - but.Width) / 2, 200);
+            but.Name = "ProfilePanelLogOutButton";
             but.TabIndex = 2;
             but.Text = "LogOut";
             but.UseVisualStyleBackColor = true;
@@ -361,13 +444,13 @@ namespace DesktopClient
         private void Generate_SignUpButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
-            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            but.Location = new Point(30, 269);
-            but.Name = "ProfilePanelSignUpButton";
             but.Size = new Size(100, 40);
+            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            but.Location = new Point((menuNormalWidth - but.Width) / 2, 269);
+            but.Name = "ProfilePanelSignUpButton";
             but.TabIndex = 2;
             but.Text = "SignUp";
             but.UseVisualStyleBackColor = true;
@@ -387,13 +470,13 @@ namespace DesktopClient
         private void Generate_LogInButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
-            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            but.Location = new Point(30, 200);
-            but.Name = "ProfilePanelLogInButton";
             but.Size = new Size(100, 40);
+            but.Font = new Font("Microsoft YaHei UI Light", 15F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            but.Location = new Point((menuNormalWidth - but.Width) / 2, 200);
+            but.Name = "ProfilePanelLogInButton";
             but.TabIndex = 2;
             but.Text = "LogIn";
             but.UseVisualStyleBackColor = true;
@@ -416,69 +499,103 @@ namespace DesktopClient
         private void Generate_LoginToSeeFriendsLabel()
         {
             var l = new Label();
-            l.AutoSize = true;
             l.Font = new Font("Microsoft YaHei Light", 14F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
-            l.Location = new Point(3, 147);
             l.Size = new Size(156, 50);
-            l.TabIndex = 1;
+            l.Location = new Point((menuNormalWidth - l.Width) / 2, 147);
             l.Name = "LogInToSeeFriendsLabel";
             l.Text = "        LogIn\r\nto see friends list";
 
             FriendsPanel.Controls.Add(l);
         }
         
+        private void Generate_AddFriendStatus(Color color, string text)
+        {
+            var p = new Panel();
+            var l = new Label();
+
+            p.Controls.Add(l);
+            FriendsListPanel.Controls.Add(p);
+            p.BringToFront();
+
+            p.BackColor = color;
+            p.Location = new Point(0, 0);
+            p.Margin = new Padding(0);
+            p.Name = "AddFriendStatusPanel";
+            p.Size = new Size(menuNormalWidth, 32);
+
+            l.AutoSize = true;
+            l.Font = new Font("Microsoft YaHei Light", 14F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            l.Name = "AddFriendStatusLabel";
+            l.Size = new Size(112, 25);
+            l.Text = text;
+            l.Location = new Point((p.Width - l.Width) / 2, 3);
+        }
+
         #endregion
 
         #region User methods
 
-        private void UserLogined()
+        private async void UserLogined(string login, string password)
         {
-            ProfilePanelStatusLogined();
-            FriendsPanelStatusLogined();
+            if(userStatus != Status.Logined)
+            {
+                ProfilePanelStatusLogined();
+                FriendsPanelStatusLogined();
+
+                userStatus = Status.Logined;
+            }
+
+            UpdateUser(login, password);
+            SaveUserInfo();
+
+            await GetFriends(userLogin, userPassword);
+
+            foreach (var f in userFriends)
+            {
+                FriendsListAddNewPanel(f);
+            }
         }
 
         private void UserNotLogined()
         {
-            ProfilePanelStatusUnlogin();
-            FriendsPanelStatusUnlogin();
+            if(userStatus != Status.Anonymous)
+            {
+                ProfilePanelStatusUnlogin();
+                FriendsPanelStatusUnlogin();
+
+                userStatus = Status.Anonymous;
+            }
+            UpdateUser(statuses[Status.Anonymous], "");
+            SaveUserInfo();
         }
 
         private void UpdateUser(string name, string pass)
         {
-            login = name;
-            password = pass;
+            userLogin = name;
+            userPassword = pass;
             ProfilepanelLoginLabel.Text = name;
             ProfilepanelLoginLabel.Left = (menuNormalWidth - ProfilepanelLoginLabel.Width) / 2;
         }
 
-        private string EncodeBase64(string name, string password)
-        {
-            var textBytes = Encoding.UTF8.GetBytes($"{name}:{password}");
-            return Convert.ToBase64String(textBytes);
-        }
-
         private void SaveUserInfo()
         {
-            Properties.Settings.Default.Login = login;
-            Properties.Settings.Default.Password = password;
+            Properties.Settings.Default.Login = userLogin;
+            Properties.Settings.Default.Password = userPassword;
             Properties.Settings.Default.Save();
         }
 
         private void LoadUserInfo()
         {
-            login = Properties.Settings.Default.Login;
-            password = Properties.Settings.Default.Password;
+            userLogin = Properties.Settings.Default.Login;
+            userPassword = Properties.Settings.Default.Password;
         }
 
         private async void StartUserSettings()
         {
             LoadUserInfo();
-            if(login != statuses[Status.Anonymous])
+            if(userLogin != statuses[Status.Anonymous])
             {
-                if(!await AuthenticateUser(login, password))
-                {
-                    UpdateUser(statuses[Status.Anonymous], "");
-                }
+                await LogInUser(userLogin, userPassword);
             }
             else
             {
@@ -490,25 +607,28 @@ namespace DesktopClient
 
         #region Connect with service
 
-        public async Task<bool> AuthenticateUser(string login, string password)
+        public async Task<bool> LogInUser(string login, string password)
         {
             string result;
-            var loginUrl = Properties.Settings.Default.loginUrl;
+            var url = Properties.Settings.Default.loginUrl;
 
             using (WebClient webClient = new WebClient())
             {
-                var uri = new Uri(loginUrl);
-                var enc = EncodeBase64(login, password);
-                webClient.Headers.Add(HttpRequestHeader.Authorization, $"Basic {enc}");
-                result = await webClient.DownloadStringTaskAsync(uri);
+                var uri = new Uri(url);
+                AddAuthorizationHeader(webClient, login, password);
+                try
+                {
+                    result = await webClient.DownloadStringTaskAsync(uri);
+                }
+                catch(WebException)
+                {
+                    result = null;
+                }
             }
-
             if (!String.IsNullOrEmpty(result))
             {
-                token = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
-                UpdateUser(login, password);
-                SaveUserInfo();
-                UserLogined();
+                userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
+                UserLogined(login, password);
                 return true;
             }
             UserNotLogined();
@@ -528,16 +648,63 @@ namespace DesktopClient
             }
             if (!String.IsNullOrEmpty(result))
             {
-                token = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
-                UpdateUser(login, password);
-                SaveUserInfo();
-                UserLogined();
+                userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
+                UserLogined(login, password);
                 return true;
             }
-            UserNotLogined();
             return false;
         }
 
+        private async Task<bool> AddFriend(string name)
+        {
+            bool result;
+            string url = Properties.Settings.Default.addFriendUrl + name;
+
+            using (WebClient webClient = new WebClient())
+            {
+                AddAuthorizationHeader(webClient, userLogin, userPassword);
+
+                try
+                {
+                    var str = await webClient.DownloadStringTaskAsync(url);
+                    result = Boolean.Parse(str);
+                }
+                catch (WebException)
+                {
+                    return false;
+                }
+            }
+            if(result)
+                userFriends.Add(name);
+
+            return result;
+        }
+
+        private async Task GetFriends(string login, string password)
+        {
+            var url = Properties.Settings.Default.getFriendsUrl;
+
+            using (var webClient = new WebClient())
+            {
+                AddAuthorizationHeader(webClient, login, password);
+
+                try
+                {
+                    var answer = await webClient.DownloadStringTaskAsync(url);
+                    userFriends = JsonConvert.DeserializeObject<List<string>>(answer).OrderBy(q => q).ToList();
+                }
+                catch (WebException)
+                {
+                    Debug.WriteLine("Can't get friends");
+                }
+            }
+        }
+
+        private void AddAuthorizationHeader(WebClient client, string login, string password)
+        {
+            var textBytes = Encoding.UTF8.GetBytes($"{login}:{password}");
+            client.Headers.Add(HttpRequestHeader.Authorization, $"Basic {Convert.ToBase64String(textBytes)}");
+        }
 
         #endregion
 

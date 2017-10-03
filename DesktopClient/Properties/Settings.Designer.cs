@@ -56,15 +56,30 @@ namespace DesktopClient.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/signup")]
         public string signupUrl {
             get {
                 return ((string)(this["signupUrl"]));
             }
-            set {
-                this["signupUrl"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/addfriend=")]
+        public string addFriendUrl {
+            get {
+                return ((string)(this["addFriendUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/friendslist")]
+        public string getFriendsUrl {
+            get {
+                return ((string)(this["getFriendsUrl"]));
             }
         }
     }

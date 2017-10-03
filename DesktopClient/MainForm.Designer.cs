@@ -40,17 +40,17 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.FormHeader = new System.Windows.Forms.Panel();
             this.HeaderExitButton = new System.Windows.Forms.PictureBox();
-            this.Timer = new System.Windows.Forms.Timer(this.components);
+            this.SideBarCloseTimer = new System.Windows.Forms.Timer(this.components);
             this.FriendsPanel = new System.Windows.Forms.Panel();
             this.FriendsListPanel = new System.Windows.Forms.Panel();
             this.Scroll = new System.Windows.Forms.Panel();
             this.AddFriendPanel = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddFriendName = new System.Windows.Forms.RichTextBox();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.welcomePanel = new System.Windows.Forms.Panel();
             this.welcomePicture = new System.Windows.Forms.PictureBox();
             this.welcomeLabel = new System.Windows.Forms.Label();
+            this.AddFriendStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.sideBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarFriends)).BeginInit();
@@ -62,7 +62,6 @@
             this.FriendsPanel.SuspendLayout();
             this.FriendsListPanel.SuspendLayout();
             this.AddFriendPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.welcomePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).BeginInit();
             this.SuspendLayout();
@@ -150,7 +149,7 @@
             // ProfilepanelAvatarPic
             // 
             this.ProfilepanelAvatarPic.Image = global::DesktopClient.Properties.Resources.anonym;
-            this.ProfilepanelAvatarPic.Location = new System.Drawing.Point(40, 50);
+            this.ProfilepanelAvatarPic.Location = new System.Drawing.Point(37, 50);
             this.ProfilepanelAvatarPic.Name = "ProfilepanelAvatarPic";
             this.ProfilepanelAvatarPic.Size = new System.Drawing.Size(80, 80);
             this.ProfilepanelAvatarPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -196,9 +195,9 @@
             this.HeaderExitButton.MouseLeave += new System.EventHandler(this.ExitButton_MouseLeave);
             this.HeaderExitButton.MouseHover += new System.EventHandler(this.ExitButton_MouseHover);
             // 
-            // Timer
+            // SideBarCloseTimer
             // 
-            this.Timer.Interval = 50;
+            this.SideBarCloseTimer.Interval = 50;
             // 
             // FriendsPanel
             // 
@@ -238,25 +237,12 @@
             // AddFriendPanel
             // 
             this.AddFriendPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(27)))), ((int)(((byte)(33)))));
-            this.AddFriendPanel.Controls.Add(this.pictureBox1);
             this.AddFriendPanel.Controls.Add(this.AddFriendName);
             this.AddFriendPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.AddFriendPanel.Location = new System.Drawing.Point(2, 0);
             this.AddFriendPanel.Name = "AddFriendPanel";
             this.AddFriendPanel.Size = new System.Drawing.Size(158, 27);
             this.AddFriendPanel.TabIndex = 2;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(131, 2);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(25, 25);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
             // 
             // AddFriendName
             // 
@@ -265,7 +251,7 @@
             this.AddFriendName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.AddFriendName.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.AddFriendName.DetectUrls = false;
-            this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddFriendName.ForeColor = System.Drawing.Color.White;
             this.AddFriendName.Location = new System.Drawing.Point(7, 0);
             this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
@@ -273,9 +259,10 @@
             this.AddFriendName.Multiline = false;
             this.AddFriendName.Name = "AddFriendName";
             this.AddFriendName.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.AddFriendName.Size = new System.Drawing.Size(124, 27);
+            this.AddFriendName.Size = new System.Drawing.Size(151, 27);
             this.AddFriendName.TabIndex = 1;
             this.AddFriendName.Text = "";
+            this.AddFriendName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddFriendName_KeyDown);
             // 
             // splitter2
             // 
@@ -323,6 +310,10 @@
             this.welcomeLabel.TabIndex = 0;
             this.welcomeLabel.Text = "Welcome to MoonChat";
             // 
+            // AddFriendStatusTimer
+            // 
+            this.AddFriendStatusTimer.Tick += new System.EventHandler(this.AddFriendStatusTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -352,7 +343,6 @@
             this.FriendsPanel.ResumeLayout(false);
             this.FriendsListPanel.ResumeLayout(false);
             this.AddFriendPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.welcomePanel.ResumeLayout(false);
             this.welcomePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).EndInit();
@@ -366,7 +356,7 @@
         private System.Windows.Forms.Panel ProfilePanel;
         private System.Windows.Forms.Panel FormHeader;
         private System.Windows.Forms.PictureBox HeaderExitButton;
-        private System.Windows.Forms.Timer Timer;
+        private System.Windows.Forms.Timer SideBarCloseTimer;
         private System.Windows.Forms.PictureBox sideBarSettings;
         private System.Windows.Forms.PictureBox sideBarFriends;
         private System.Windows.Forms.PictureBox sideBarProfile;
@@ -382,7 +372,7 @@
         private System.Windows.Forms.Panel Scroll;
         private System.Windows.Forms.RichTextBox AddFriendName;
         private System.Windows.Forms.Panel AddFriendPanel;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Timer AddFriendStatusTimer;
     }
 }
 

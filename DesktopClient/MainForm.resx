@@ -117,24 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="Timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="SideBarCloseTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="AddFriendStatusTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>170, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAABGdBTUEAALGPC/xhBQAAAeFJREFUSEut
-        lgG1wjAMRZGABCQgAQlI+BKQgAMkIAEJSEDCl4CE/XtLus9otxXYOydnS5blJWnabTWFruvWyA45IFfk
-        jPzE4+VAUIkuQXKUBJH0FrIcKcEkOoc6gETI7yKEBNkid2QdpgI82+gT6ucgiJlfQx0FPla3CfUzEMC1
-        OYU6iiDbhfoZCLBHLqGOIsi+riytWahVtPg0gSDurbkBsfpFyFyzljZOJtQEA0SgbZgK8OyE3EL9DgTy
-        1KhWhz0n890kZjwFLNqEzfVapqoMAnpkDaqTHDGJfZiWgQGRQQVB1oWaEDbb7qFtIiap3r4HcS6OLfQB
-        Wfi4uR0Y791/JimZOITrOHDyJYMcw9QDmxUY2C2iT7Wl2I3h56hOyAM3tMEMUnXCbnU5mcFEotvCfqi4
-        9+sg/rcRiiRmkUiQyc0aPsX3DpsYvItuix++3NhfF3aWJAM/Kyjah028kj2OtnyDjJ4WNeBvB9I7XCWu
-        IU0y19TK7FgMwRx4Jw1JqOquY5pUYPCkx7O0RN6YoZJ/ZFrEl12H4gOLTby20WU6Z9Z3xczLKQPoJtOT
-        ca9fMbVvgwB5n1VPCuy20mWa/cVoAoEkFLbVqiXwautMpHnCm0AwN3j6viFOtlcremrdavUHpc4lASv4
-        mwAAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA

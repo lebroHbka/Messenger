@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Client.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DesktopClient.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Login" Type="System.String" Scope="User">
@@ -11,8 +11,14 @@
     <Setting Name="loginUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost:1000/user/login</Value>
     </Setting>
-    <Setting Name="signupUrl" Type="System.String" Scope="User">
+    <Setting Name="signupUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost:1000/user/signup</Value>
+    </Setting>
+    <Setting Name="addFriendUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:1000/user/addfriend=</Value>
+    </Setting>
+    <Setting Name="getFriendsUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:1000/user/friendslist</Value>
     </Setting>
   </Settings>
 </SettingsFile>

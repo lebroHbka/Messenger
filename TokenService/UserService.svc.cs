@@ -13,6 +13,7 @@ using System.Text;
 using Serilog;
 using Serilog.Core;
 using SQLite;
+using System.Collections.Generic;
 
 namespace MessagesService
 {
@@ -39,19 +40,11 @@ namespace MessagesService
 
         public Token LogIn()
         {
-            var authHeader = WebOperationContext.Current.IncomingRequest.Headers[HttpRequestHeader.Authorization];
-            if(authHeader != null)
-            {
-                var encodedLogPass = authHeader.Split(' ');
-                var logPass = DecodeBase64(encodedLogPass.Last()).Split(':');
-                if (logPass.Length == 2)
-                {
-                    string name = logPass[0], pass = logPass[1];
-                    var user = FindUser(name, pass);
-                    if (user != null)
-                        return ProvideToken(user);
-                }
-            } 
+            var usr = Authorization(WebOperationContext.Current);
+
+            if(usr != null)
+                return ProvideToken(usr);
+            WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
             return null;
         }
 
@@ -68,10 +61,52 @@ namespace MessagesService
             }
         }
 
+        public bool AddFriend(string name)
+        {
+            var usr = Authorization(WebOperationContext.Current);
+            if(usr == null)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
+                return false;
+            }
+            var frd = FindUser(name);
+            if(frd == null)
+                return false;
+
+            return true;
+        }
+
+        public List<string> GetFriends()
+        {
+            var usr = Authorization(WebOperationContext.Current);
+            if (usr == null)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
+                return null;
+            }
+            return FindFriends(usr.Login);
+        }
 
 
 
-        
+        private User Authorization(WebOperationContext context)
+        {
+            var authHeader = context.IncomingRequest.Headers[HttpRequestHeader.Authorization];
+
+            if (authHeader != null)
+            {
+                var encodedLogPass = authHeader.Split(' ');
+                var logPass = DecodeBase64(encodedLogPass.Last()).Split(':');
+                if (logPass.Length == 2)
+                {
+                    string name = logPass[0], pass = logPass[1];
+                    var user = FindUser(name, pass);
+                    return user;
+                }
+            }
+            return null;
+        }
+
         private void AddNewUser(string name, string pass)
         {
             using (var db = new SQLiteConnection(connectionString))
@@ -101,7 +136,25 @@ namespace MessagesService
             return us;
         }
 
+        private List<string> FindFriends(string name)
+        {
+            List<Friends> friends;
+            var friendsNames = new List<string>();
 
+            using (var db = new SQLiteConnection(connectionString))
+            {
+                friends = db.Table<Friends>().Where(u => (u.Friend1_login == name) || (u.Friend2_login == name)).ToList();
+            }
+
+            foreach (var f in friends)
+            {
+                if (f.Friend1_login != name)
+                    friendsNames.Add(f.Friend1_login);
+                else
+                    friendsNames.Add(f.Friend2_login);
+            }
+            return friendsNames;
+        }
 
 
         private string DecodeBase64(string str)

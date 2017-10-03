@@ -88,7 +88,7 @@
             this.LogInButton.TabStop = false;
             this.LogInButton.Text = "LogIn";
             this.LogInButton.UseVisualStyleBackColor = false;
-            this.LogInButton.Click += new System.EventHandler(this.AuthenticationLogInButton_Click);
+            this.LogInButton.Click += new System.EventHandler(this.LogInButton_Click);
             // 
             // RegistrationButton
             // 
@@ -107,7 +107,7 @@
             this.RegistrationButton.Text = "Register";
             this.RegistrationButton.UseVisualStyleBackColor = false;
             this.RegistrationButton.Visible = false;
-            this.RegistrationButton.Click += new System.EventHandler(this.SignInRegistrationButton_Click);
+            this.RegistrationButton.Click += new System.EventHandler(this.RegistrationButton_Click);
             // 
             // HelpPanel2
             // 
