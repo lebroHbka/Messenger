@@ -73,6 +73,7 @@ namespace DesktopClient
             elements.Add(item);
             mainPanel.Controls.Add(item);
             FixScroll();
+            MoveScroll(mainPanelHeight);
         }
 
         public void Clear()
@@ -118,11 +119,14 @@ namespace DesktopClient
 
             if (outside > 0)
             {
+                mainPanel.SuspendLayout();
+                elements.ForEach(u => u.SuspendLayout());
+
                 if ((scroll.Top + distance >= 0) && (scroll.Top + distance + scroll.Height <= mainPanelHeight))
                 {
                     scroll.Top += distance;
                     var tick = (double)outside / (mainPanelHeight - scroll.Height);
-
+                    
                     foreach (var e in elements)
                     {
                         e.Top -= (int)(distance * tick);
@@ -147,9 +151,9 @@ namespace DesktopClient
                         e.Top -= offset;
                     }
                 }
-
+                elements.ForEach(u => u.SuspendLayout());
+                mainPanel.ResumeLayout();
             }
-
         }
     }
 }

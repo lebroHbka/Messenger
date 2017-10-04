@@ -43,14 +43,24 @@
             this.SideBarCloseTimer = new System.Windows.Forms.Timer(this.components);
             this.FriendsPanel = new System.Windows.Forms.Panel();
             this.FriendsListPanel = new System.Windows.Forms.Panel();
-            this.Scroll = new System.Windows.Forms.Panel();
+            this.FriendsScroll = new System.Windows.Forms.Panel();
             this.AddFriendPanel = new System.Windows.Forms.Panel();
             this.AddFriendName = new System.Windows.Forms.RichTextBox();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.welcomePanel = new System.Windows.Forms.Panel();
+            this.ChatPanel = new System.Windows.Forms.Panel();
+            this.ChatInputMessageText = new System.Windows.Forms.RichTextBox();
+            this.ChatDecoratePanel2 = new System.Windows.Forms.Panel();
+            this.ChatDecoratePanel1 = new System.Windows.Forms.Panel();
+            this.ChatSendMessageButton = new System.Windows.Forms.Button();
+            this.ChatFriendName = new System.Windows.Forms.Label();
+            this.ChatFriendPic = new System.Windows.Forms.PictureBox();
+            this.ChatMessagesPanel = new System.Windows.Forms.Panel();
+            this.ChatScroll = new System.Windows.Forms.Panel();
             this.welcomePicture = new System.Windows.Forms.PictureBox();
             this.welcomeLabel = new System.Windows.Forms.Label();
             this.AddFriendStatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.ChatCloseButton = new System.Windows.Forms.PictureBox();
             this.sideBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarFriends)).BeginInit();
@@ -63,7 +73,11 @@
             this.FriendsListPanel.SuspendLayout();
             this.AddFriendPanel.SuspendLayout();
             this.welcomePanel.SuspendLayout();
+            this.ChatPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ChatFriendPic)).BeginInit();
+            this.ChatMessagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChatCloseButton)).BeginInit();
             this.SuspendLayout();
             // 
             // sideBarMenu
@@ -76,7 +90,7 @@
             this.sideBarMenu.Location = new System.Drawing.Point(0, 0);
             this.sideBarMenu.Margin = new System.Windows.Forms.Padding(0);
             this.sideBarMenu.Name = "sideBarMenu";
-            this.sideBarMenu.Size = new System.Drawing.Size(40, 400);
+            this.sideBarMenu.Size = new System.Drawing.Size(40, 450);
             this.sideBarMenu.TabIndex = 0;
             // 
             // sideBarSettings
@@ -130,7 +144,7 @@
             this.ProfilePanel.Location = new System.Drawing.Point(40, 0);
             this.ProfilePanel.Margin = new System.Windows.Forms.Padding(0);
             this.ProfilePanel.Name = "ProfilePanel";
-            this.ProfilePanel.Size = new System.Drawing.Size(0, 400);
+            this.ProfilePanel.Size = new System.Drawing.Size(0, 450);
             this.ProfilePanel.TabIndex = 1;
             this.ProfilePanel.Visible = false;
             // 
@@ -164,7 +178,7 @@
             this.splitter1.Margin = new System.Windows.Forms.Padding(10, 1, 1, 1);
             this.splitter1.Name = "splitter1";
             this.splitter1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.splitter1.Size = new System.Drawing.Size(2, 400);
+            this.splitter1.Size = new System.Drawing.Size(2, 450);
             this.splitter1.TabIndex = 0;
             this.splitter1.TabStop = false;
             // 
@@ -172,10 +186,10 @@
             // 
             this.FormHeader.Controls.Add(this.HeaderExitButton);
             this.FormHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.FormHeader.Location = new System.Drawing.Point(200, 0);
+            this.FormHeader.Location = new System.Drawing.Point(40, 0);
             this.FormHeader.Margin = new System.Windows.Forms.Padding(0);
             this.FormHeader.Name = "FormHeader";
-            this.FormHeader.Size = new System.Drawing.Size(400, 50);
+            this.FormHeader.Size = new System.Drawing.Size(660, 40);
             this.FormHeader.TabIndex = 2;
             this.FormHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseDown);
             this.FormHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseMove);
@@ -185,7 +199,7 @@
             this.HeaderExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderExitButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.HeaderExitButton.Image = global::DesktopClient.Properties.Resources.ExitButton;
-            this.HeaderExitButton.Location = new System.Drawing.Point(358, 10);
+            this.HeaderExitButton.Location = new System.Drawing.Point(610, 5);
             this.HeaderExitButton.Name = "HeaderExitButton";
             this.HeaderExitButton.Size = new System.Drawing.Size(30, 30);
             this.HeaderExitButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -209,30 +223,30 @@
             this.FriendsPanel.Location = new System.Drawing.Point(40, 0);
             this.FriendsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.FriendsPanel.Name = "FriendsPanel";
-            this.FriendsPanel.Size = new System.Drawing.Size(160, 400);
+            this.FriendsPanel.Size = new System.Drawing.Size(0, 450);
             this.FriendsPanel.TabIndex = 4;
             this.FriendsPanel.Visible = false;
             // 
             // FriendsListPanel
             // 
             this.FriendsListPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(41)))));
-            this.FriendsListPanel.Controls.Add(this.Scroll);
+            this.FriendsListPanel.Controls.Add(this.FriendsScroll);
             this.FriendsListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FriendsListPanel.Location = new System.Drawing.Point(2, 27);
             this.FriendsListPanel.Margin = new System.Windows.Forms.Padding(0);
             this.FriendsListPanel.Name = "FriendsListPanel";
-            this.FriendsListPanel.Size = new System.Drawing.Size(158, 373);
+            this.FriendsListPanel.Size = new System.Drawing.Size(0, 423);
             this.FriendsListPanel.TabIndex = 1;
             // 
-            // Scroll
+            // FriendsScroll
             // 
-            this.Scroll.BackColor = System.Drawing.Color.Transparent;
-            this.Scroll.Location = new System.Drawing.Point(150, 0);
-            this.Scroll.Margin = new System.Windows.Forms.Padding(0);
-            this.Scroll.Name = "Scroll";
-            this.Scroll.Size = new System.Drawing.Size(8, 100);
-            this.Scroll.TabIndex = 0;
-            this.Scroll.Paint += new System.Windows.Forms.PaintEventHandler(this.Scroll_Paint);
+            this.FriendsScroll.BackColor = System.Drawing.Color.Transparent;
+            this.FriendsScroll.Location = new System.Drawing.Point(150, 0);
+            this.FriendsScroll.Margin = new System.Windows.Forms.Padding(0);
+            this.FriendsScroll.Name = "FriendsScroll";
+            this.FriendsScroll.Size = new System.Drawing.Size(8, 100);
+            this.FriendsScroll.TabIndex = 0;
+            this.FriendsScroll.Paint += new System.Windows.Forms.PaintEventHandler(this.Scroll_Paint);
             // 
             // AddFriendPanel
             // 
@@ -241,7 +255,7 @@
             this.AddFriendPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.AddFriendPanel.Location = new System.Drawing.Point(2, 0);
             this.AddFriendPanel.Name = "AddFriendPanel";
-            this.AddFriendPanel.Size = new System.Drawing.Size(158, 27);
+            this.AddFriendPanel.Size = new System.Drawing.Size(0, 27);
             this.AddFriendPanel.TabIndex = 2;
             // 
             // AddFriendName
@@ -253,7 +267,7 @@
             this.AddFriendName.DetectUrls = false;
             this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddFriendName.ForeColor = System.Drawing.Color.White;
-            this.AddFriendName.Location = new System.Drawing.Point(7, 0);
+            this.AddFriendName.Location = new System.Drawing.Point(-91, 0);
             this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
             this.AddFriendName.MaxLength = 10;
             this.AddFriendName.Multiline = false;
@@ -272,27 +286,128 @@
             this.splitter2.Margin = new System.Windows.Forms.Padding(10, 1, 1, 1);
             this.splitter2.Name = "splitter2";
             this.splitter2.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.splitter2.Size = new System.Drawing.Size(2, 400);
+            this.splitter2.Size = new System.Drawing.Size(2, 450);
             this.splitter2.TabIndex = 0;
             this.splitter2.TabStop = false;
             // 
             // welcomePanel
             // 
             this.welcomePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.welcomePanel.Controls.Add(this.ChatPanel);
             this.welcomePanel.Controls.Add(this.welcomePicture);
             this.welcomePanel.Controls.Add(this.welcomeLabel);
             this.welcomePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.welcomePanel.Location = new System.Drawing.Point(200, 50);
+            this.welcomePanel.Location = new System.Drawing.Point(40, 40);
             this.welcomePanel.Margin = new System.Windows.Forms.Padding(0);
             this.welcomePanel.Name = "welcomePanel";
-            this.welcomePanel.Size = new System.Drawing.Size(400, 350);
+            this.welcomePanel.Size = new System.Drawing.Size(660, 410);
             this.welcomePanel.TabIndex = 3;
+            // 
+            // ChatPanel
+            // 
+            this.ChatPanel.Controls.Add(this.ChatCloseButton);
+            this.ChatPanel.Controls.Add(this.ChatInputMessageText);
+            this.ChatPanel.Controls.Add(this.ChatDecoratePanel2);
+            this.ChatPanel.Controls.Add(this.ChatDecoratePanel1);
+            this.ChatPanel.Controls.Add(this.ChatSendMessageButton);
+            this.ChatPanel.Controls.Add(this.ChatFriendName);
+            this.ChatPanel.Controls.Add(this.ChatFriendPic);
+            this.ChatPanel.Controls.Add(this.ChatMessagesPanel);
+            this.ChatPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChatPanel.Location = new System.Drawing.Point(0, 0);
+            this.ChatPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ChatPanel.Name = "ChatPanel";
+            this.ChatPanel.Size = new System.Drawing.Size(660, 410);
+            this.ChatPanel.TabIndex = 2;
+            this.ChatPanel.Visible = false;
+            // 
+            // ChatInputMessageText
+            // 
+            this.ChatInputMessageText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(56)))), ((int)(((byte)(68)))));
+            this.ChatInputMessageText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ChatInputMessageText.Font = new System.Drawing.Font("Microsoft YaHei UI Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ChatInputMessageText.Location = new System.Drawing.Point(32, 322);
+            this.ChatInputMessageText.Margin = new System.Windows.Forms.Padding(0);
+            this.ChatInputMessageText.Name = "ChatInputMessageText";
+            this.ChatInputMessageText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.ChatInputMessageText.Size = new System.Drawing.Size(515, 75);
+            this.ChatInputMessageText.TabIndex = 5;
+            this.ChatInputMessageText.TabStop = false;
+            this.ChatInputMessageText.Text = "";
+            // 
+            // ChatDecoratePanel2
+            // 
+            this.ChatDecoratePanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(56)))), ((int)(((byte)(68)))));
+            this.ChatDecoratePanel2.Location = new System.Drawing.Point(21, 322);
+            this.ChatDecoratePanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.ChatDecoratePanel2.Name = "ChatDecoratePanel2";
+            this.ChatDecoratePanel2.Size = new System.Drawing.Size(11, 75);
+            this.ChatDecoratePanel2.TabIndex = 8;
+            // 
+            // ChatDecoratePanel1
+            // 
+            this.ChatDecoratePanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(74)))), ((int)(((byte)(94)))));
+            this.ChatDecoratePanel1.Location = new System.Drawing.Point(21, 4);
+            this.ChatDecoratePanel1.Name = "ChatDecoratePanel1";
+            this.ChatDecoratePanel1.Size = new System.Drawing.Size(8, 50);
+            this.ChatDecoratePanel1.TabIndex = 7;
+            // 
+            // ChatSendMessageButton
+            // 
+            this.ChatSendMessageButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ChatSendMessageButton.Font = new System.Drawing.Font("Microsoft YaHei UI Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ChatSendMessageButton.Location = new System.Drawing.Point(565, 339);
+            this.ChatSendMessageButton.Name = "ChatSendMessageButton";
+            this.ChatSendMessageButton.Size = new System.Drawing.Size(75, 41);
+            this.ChatSendMessageButton.TabIndex = 6;
+            this.ChatSendMessageButton.Text = "Send";
+            this.ChatSendMessageButton.UseVisualStyleBackColor = true;
+            this.ChatSendMessageButton.Click += new System.EventHandler(this.ChatSendMessageButton_Click);
+            // 
+            // ChatFriendName
+            // 
+            this.ChatFriendName.AutoSize = true;
+            this.ChatFriendName.Font = new System.Drawing.Font("Microsoft YaHei UI Light", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ChatFriendName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(98)))), ((int)(((byte)(114)))));
+            this.ChatFriendName.Location = new System.Drawing.Point(81, 16);
+            this.ChatFriendName.Name = "ChatFriendName";
+            this.ChatFriendName.Size = new System.Drawing.Size(122, 27);
+            this.ChatFriendName.TabIndex = 4;
+            this.ChatFriendName.Text = "Anonymous";
+            this.ChatFriendName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ChatFriendPic
+            // 
+            this.ChatFriendPic.Image = global::DesktopClient.Properties.Resources.anonym;
+            this.ChatFriendPic.Location = new System.Drawing.Point(35, 9);
+            this.ChatFriendPic.Name = "ChatFriendPic";
+            this.ChatFriendPic.Size = new System.Drawing.Size(40, 40);
+            this.ChatFriendPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ChatFriendPic.TabIndex = 1;
+            this.ChatFriendPic.TabStop = false;
+            // 
+            // ChatMessagesPanel
+            // 
+            this.ChatMessagesPanel.Controls.Add(this.ChatScroll);
+            this.ChatMessagesPanel.Location = new System.Drawing.Point(22, 67);
+            this.ChatMessagesPanel.Name = "ChatMessagesPanel";
+            this.ChatMessagesPanel.Size = new System.Drawing.Size(618, 238);
+            this.ChatMessagesPanel.TabIndex = 0;
+            // 
+            // ChatScroll
+            // 
+            this.ChatScroll.Location = new System.Drawing.Point(610, 0);
+            this.ChatScroll.Margin = new System.Windows.Forms.Padding(0);
+            this.ChatScroll.Name = "ChatScroll";
+            this.ChatScroll.Size = new System.Drawing.Size(8, 109);
+            this.ChatScroll.TabIndex = 0;
+            this.ChatScroll.Paint += new System.Windows.Forms.PaintEventHandler(this.Scroll_Paint);
             // 
             // welcomePicture
             // 
             this.welcomePicture.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.welcomePicture.Image = global::DesktopClient.Properties.Resources.Logo;
-            this.welcomePicture.Location = new System.Drawing.Point(136, 90);
+            this.welcomePicture.Location = new System.Drawing.Point(268, 119);
             this.welcomePicture.Name = "welcomePicture";
             this.welcomePicture.Size = new System.Drawing.Size(100, 100);
             this.welcomePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -304,7 +419,7 @@
             this.welcomeLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.welcomeLabel.AutoSize = true;
             this.welcomeLabel.Font = new System.Drawing.Font("Microsoft YaHei Light", 23F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.welcomeLabel.Location = new System.Drawing.Point(24, 193);
+            this.welcomeLabel.Location = new System.Drawing.Point(156, 222);
             this.welcomeLabel.Name = "welcomeLabel";
             this.welcomeLabel.Size = new System.Drawing.Size(347, 40);
             this.welcomeLabel.TabIndex = 0;
@@ -314,12 +429,25 @@
             // 
             this.AddFriendStatusTimer.Tick += new System.EventHandler(this.AddFriendStatusTimer_Tick);
             // 
+            // ChatCloseButton
+            // 
+            this.ChatCloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChatCloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ChatCloseButton.Image = global::DesktopClient.Properties.Resources.ExitButton;
+            this.ChatCloseButton.Location = new System.Drawing.Point(641, 3);
+            this.ChatCloseButton.Name = "ChatCloseButton";
+            this.ChatCloseButton.Size = new System.Drawing.Size(15, 15);
+            this.ChatCloseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ChatCloseButton.TabIndex = 9;
+            this.ChatCloseButton.TabStop = false;
+            this.ChatCloseButton.Click += new System.EventHandler(this.ChatCloseButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(43)))), ((int)(((byte)(52)))));
-            this.ClientSize = new System.Drawing.Size(600, 400);
+            this.ClientSize = new System.Drawing.Size(700, 450);
             this.Controls.Add(this.welcomePanel);
             this.Controls.Add(this.FormHeader);
             this.Controls.Add(this.FriendsPanel);
@@ -331,6 +459,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MoonChat";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.sideBarMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sideBarSettings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarFriends)).EndInit();
@@ -345,7 +474,12 @@
             this.AddFriendPanel.ResumeLayout(false);
             this.welcomePanel.ResumeLayout(false);
             this.welcomePanel.PerformLayout();
+            this.ChatPanel.ResumeLayout(false);
+            this.ChatPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ChatFriendPic)).EndInit();
+            this.ChatMessagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.welcomePicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChatCloseButton)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -369,10 +503,20 @@
         private System.Windows.Forms.PictureBox welcomePicture;
         private System.Windows.Forms.Label welcomeLabel;
         private System.Windows.Forms.Panel FriendsListPanel;
-        private System.Windows.Forms.Panel Scroll;
+        private System.Windows.Forms.Panel FriendsScroll;
         private System.Windows.Forms.RichTextBox AddFriendName;
         private System.Windows.Forms.Panel AddFriendPanel;
         private System.Windows.Forms.Timer AddFriendStatusTimer;
+        private System.Windows.Forms.Panel ChatPanel;
+        private System.Windows.Forms.Label ChatFriendName;
+        private System.Windows.Forms.PictureBox ChatFriendPic;
+        private System.Windows.Forms.Panel ChatMessagesPanel;
+        private System.Windows.Forms.Button ChatSendMessageButton;
+        private System.Windows.Forms.RichTextBox ChatInputMessageText;
+        private System.Windows.Forms.Panel ChatScroll;
+        private System.Windows.Forms.Panel ChatDecoratePanel1;
+        private System.Windows.Forms.Panel ChatDecoratePanel2;
+        private System.Windows.Forms.PictureBox ChatCloseButton;
     }
 }
 

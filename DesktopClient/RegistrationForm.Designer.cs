@@ -65,7 +65,7 @@
             this.LoginPanel.Controls.Add(this.HelpPanel1);
             this.LoginPanel.Controls.Add(this.UserPassField);
             this.LoginPanel.Controls.Add(this.UserLoginField);
-            this.LoginPanel.Location = new System.Drawing.Point(100, 137);
+            this.LoginPanel.Location = new System.Drawing.Point(150, 160);
             this.LoginPanel.Margin = new System.Windows.Forms.Padding(0);
             this.LoginPanel.Name = "LoginPanel";
             this.LoginPanel.Size = new System.Drawing.Size(400, 230);
@@ -192,7 +192,7 @@
             // ActiveTabStatus
             // 
             this.ActiveTabStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(204)))), ((int)(((byte)(253)))));
-            this.ActiveTabStatus.Location = new System.Drawing.Point(125, 116);
+            this.ActiveTabStatus.Location = new System.Drawing.Point(175, 139);
             this.ActiveTabStatus.Name = "ActiveTabStatus";
             this.ActiveTabStatus.Size = new System.Drawing.Size(134, 5);
             this.ActiveTabStatus.TabIndex = 3;
@@ -208,7 +208,7 @@
             this.SignUpTab.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SignUpTab.Font = new System.Drawing.Font("Microsoft YaHei Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.SignUpTab.ForeColor = System.Drawing.Color.Black;
-            this.SignUpTab.Location = new System.Drawing.Point(345, 75);
+            this.SignUpTab.Location = new System.Drawing.Point(395, 98);
             this.SignUpTab.Margin = new System.Windows.Forms.Padding(0);
             this.SignUpTab.Name = "SignUpTab";
             this.SignUpTab.Size = new System.Drawing.Size(134, 41);
@@ -230,7 +230,7 @@
             this.LogInTab.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LogInTab.Font = new System.Drawing.Font("Microsoft YaHei Light", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.LogInTab.ForeColor = System.Drawing.Color.Black;
-            this.LogInTab.Location = new System.Drawing.Point(125, 75);
+            this.LogInTab.Location = new System.Drawing.Point(175, 98);
             this.LogInTab.Margin = new System.Windows.Forms.Padding(0);
             this.LogInTab.Name = "LogInTab";
             this.LogInTab.Size = new System.Drawing.Size(134, 41);
@@ -246,7 +246,7 @@
             this.ExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ExitButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ExitButton.Image = ((System.Drawing.Image)(resources.GetObject("ExitButton.Image")));
-            this.ExitButton.Location = new System.Drawing.Point(558, 10);
+            this.ExitButton.Location = new System.Drawing.Point(658, 5);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(30, 30);
             this.ExitButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -266,7 +266,7 @@
             this.FormHeader.Location = new System.Drawing.Point(0, 0);
             this.FormHeader.Margin = new System.Windows.Forms.Padding(0);
             this.FormHeader.Name = "FormHeader";
-            this.FormHeader.Size = new System.Drawing.Size(600, 50);
+            this.FormHeader.Size = new System.Drawing.Size(700, 40);
             this.FormHeader.TabIndex = 6;
             this.FormHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseDown);
             this.FormHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseMove);
@@ -281,12 +281,13 @@
             this.MainPanel.Controls.Add(this.SignUpTab);
             this.MainPanel.Controls.Add(this.LogInTab);
             this.MainPanel.Controls.Add(this.FormHeader);
+            this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainPanel.ForeColor = System.Drawing.Color.Black;
             this.MainPanel.ImeMode = System.Windows.Forms.ImeMode.On;
             this.MainPanel.Location = new System.Drawing.Point(0, 0);
             this.MainPanel.Margin = new System.Windows.Forms.Padding(0);
             this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(600, 400);
+            this.MainPanel.Size = new System.Drawing.Size(700, 450);
             this.MainPanel.TabIndex = 3;
             // 
             // StatusPanel
@@ -296,7 +297,7 @@
             this.StatusPanel.Location = new System.Drawing.Point(0, 0);
             this.StatusPanel.Margin = new System.Windows.Forms.Padding(0);
             this.StatusPanel.Name = "StatusPanel";
-            this.StatusPanel.Size = new System.Drawing.Size(600, 400);
+            this.StatusPanel.Size = new System.Drawing.Size(700, 450);
             this.StatusPanel.TabIndex = 40;
             this.StatusPanel.Visible = false;
             this.StatusPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.AuthenticationStatusPanel_Paint);
@@ -306,7 +307,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(43)))), ((int)(((byte)(52)))));
-            this.ClientSize = new System.Drawing.Size(600, 400);
+            this.ClientSize = new System.Drawing.Size(700, 450);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.StatusPanel);
             this.DoubleBuffered = true;

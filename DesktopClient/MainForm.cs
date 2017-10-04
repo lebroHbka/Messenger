@@ -46,8 +46,8 @@ namespace DesktopClient
         Color activeSideBarButtonColor = Color.FromArgb(20, 23, 28);
         Color transparentColor = Color.Transparent;
 
-        Color FriendPanelHovered = Color.FromArgb(255, 38, 51, 62);
-        Color FriendPanelNotHovered = Color.Transparent;
+        Color FriendPanelHoveredColor = Color.FromArgb(255, 38, 51, 62);
+        Color FriendPanelNotHoveredColor = Color.Transparent;
 
         Color ScrollColor = Color.FromArgb(255, 22, 25, 30);
 
@@ -55,7 +55,9 @@ namespace DesktopClient
         Color userAddedSuccessColor = Color.FromArgb(255, 6, 96, 11);
         Color userAddedFailColor = Color.FromArgb(255, 122, 17, 17);
 
-        Color profilePanelButtonPress = Color.FromArgb(255, 152, 204, 253);
+        Color profilePanelButtonPressColor = Color.FromArgb(255, 152, 204, 253);
+
+        Color myMessagesTextPanelColor = Color.FromArgb(255, 49, 74, 94);
 
         #endregion
 
@@ -65,7 +67,13 @@ namespace DesktopClient
 
         int userAddFriendNotifDelay = 1500;
 
-        CustomScrollBar custScroll;
+        #region Scrolls
+
+        CustomScrollBar friendScroll;
+
+        CustomScrollBar chatScroll;
+
+        #endregion
 
         Dictionary<PictureBox, Panel> activeSideBar = new Dictionary<PictureBox, Panel>();
 
@@ -74,19 +82,53 @@ namespace DesktopClient
             { Status.Anonymous, "Anonymous"},
         };
 
+        int messagePanelMaxWidth = 250;
+
+        int chatPanelCurrentWidth;
 
         #endregion
+
+        
+
 
 
         public MainForm()
         {
             InitializeComponent();
-            custScroll = new CustomScrollBar(FriendsListPanel, Scroll, 3);
+            friendScroll = new CustomScrollBar(FriendsListPanel, FriendsScroll, 3);
 
             StartUserSettings();
             ControlsSettings();
 
-            
+            chatScroll = new CustomScrollBar(ChatMessagesPanel, ChatScroll, 10);
+        }
+
+        
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            ChatPanel.Resize += (object obj, EventArgs args) =>
+            {
+                if (chatPanelCurrentWidth != ChatPanel.Width)
+                {
+                    ChatInputMessageText.SuspendLayout();
+                    ChatSendMessageButton.SuspendLayout();
+                    ChatMessagesPanel.SuspendLayout();
+                    ChatScroll.SuspendLayout();
+
+                    var d = ChatPanel.Width - chatPanelCurrentWidth;
+
+                    ChatInputMessageText.Width += d;
+                    ChatSendMessageButton.Left += d;
+                    ChatMessagesPanel.Width += d;
+                    ChatScroll.Left += d;
+
+                    chatPanelCurrentWidth = ChatPanel.Width;
+                }
+
+            };
+
+
+            chatPanelCurrentWidth = ChatPanel.Width;
         }
 
         private void ControlsSettings()
@@ -99,26 +141,37 @@ namespace DesktopClient
 
             // profile panel
             ProfilepanelAvatarPic.Left = (menuNormalWidth - ProfilepanelAvatarPic.Width) / 2;
+
         }
 
 
 
         #region Custom scroll
         
+        // friend scroll
         private void FriendsListAddNewPanel(string name)
         {
-            custScroll.AddNewItem(CreatePanel(name));
+            friendScroll.AddNewItem(CreateFriendPanel(name));
         }
 
         private void FriendsListClear()
         {
-            custScroll.Clear();
+            friendScroll.Clear();
         }
 
-        private Panel CreatePanel(string name)
+        // custom class for enabling doubleclick event (wtf?!?)
+        class MyButt : Button
+        {
+            public MyButt()
+            {
+                SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, true);
+            }
+        }
+
+        private Panel CreateFriendPanel(string name)
         {
             var p = new Panel();
-            var but = new Button();
+            var but = new MyButt();
             var picBox = new PictureBox();
 
             // custom panel
@@ -146,33 +199,122 @@ namespace DesktopClient
             but.Size = new Size(114, 50);
             but.Text = name;
             but.UseVisualStyleBackColor = true;
-            but.MouseLeave += (object sender, EventArgs e) => { but.Parent.BackColor = FriendPanelNotHovered; };
-            but.MouseHover += (object sender, EventArgs e) => { but.Parent.BackColor = FriendPanelHovered; };
+            but.MouseLeave += (object sender, EventArgs e) => { but.Parent.BackColor = FriendPanelNotHoveredColor; };
+            but.MouseHover += (object sender, EventArgs e) => { but.Parent.BackColor = FriendPanelHoveredColor; };
+            but.DoubleClick += (object sender, EventArgs e) =>
+            {
+                ChatFriendName.Text = but.Text;
+                ChatPanel.Visible = true;
+            };
+
+            return p;
+        }
+        
+
+        // chat scroll
+        private void ChatMessageAddNewPanel(string text)
+        {
+            chatScroll.AddNewItem(CreateChatMessagesPanel(text));
+        }
+
+        private Panel CreateChatMessagesPanel(string text)
+        {
+            
+            var p = new Panel();
+            var rich = new RichTextBox();
+
+            p.SuspendLayout();
+            rich.SuspendLayout();
+
+            p.Controls.Add(rich);
+
+            rich.BackColor = myMessagesTextPanelColor;
+            rich.BorderStyle = BorderStyle.None;
+            rich.Font = new Font("Microsoft YaHei UI Light", 13F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            rich.ForeColor = Color.Black;
+            rich.CausesValidation = false;
+            rich.Cursor = Cursors.Arrow;
+            rich.ScrollBars = RichTextBoxScrollBars.None;
+            rich.ShortcutsEnabled = false;
+            rich.WordWrap = true;
+            rich.TabStop = false;
+            rich.Margin = new Padding(0,0,0,0);
+            rich.Text = text;
+            rich.Left = 10;
+            rich.Top = 4;
+
+            using (Graphics g = CreateGraphics())
+            {
+                rich.Height = (int)g.MeasureString(rich.Text, rich.Font, messagePanelMaxWidth).Height;
+                rich.Width = (int)g.MeasureString(rich.Text, rich.Font, messagePanelMaxWidth).Width;
+            }
+
+            // panel
+            p.BackColor = Color.Transparent;
+            p.Size = new Size(rich.Width + 20, rich.Height + 8);
+            p.Margin = new Padding(0,0,0,0);
+            p.Paint += new PaintEventHandler(ChatMessagesPanel_Paint);
+
+            rich.ResumeLayout();
+            p.ResumeLayout();
 
             return p;
         }
 
-        private void Scroll_Paint(object sender, PaintEventArgs e)
+        private void ChatMessagesPanel_Paint(object sender, PaintEventArgs e)
         {
-            Graphics v = e.Graphics;
-            var pen = new Pen(ScrollColor);
-            DrawRoundRect(v, pen, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1, 3);
+            var panel = sender as Panel;
+            panel.SuspendLayout();
+
+            using (Graphics v = e.Graphics)
+            {
+                using (var pen = new Pen(myMessagesTextPanelColor))
+                {
+                    DrawRoundRect(v, pen, panel.ClientRectangle.Left, panel.ClientRectangle.Top, panel.ClientRectangle.Width - 1, panel.ClientRectangle.Height - 1, 10);
+                }
+            }
+
+            panel.ResumeLayout();
             base.OnPaint(e);
         }
 
+
+        // scroll paint
+        private void Scroll_Paint(object sender, PaintEventArgs e)
+        {
+            using (Graphics v = e.Graphics)
+            {
+                using (var pen = new Pen(ScrollColor))
+                {
+                    DrawRoundRect(v, pen, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1, 3);
+                }
+            }
+            base.OnPaint(e);
+        }
+
+        // make rounded
         private void DrawRoundRect(Graphics g, Pen p, float X, float Y, float width, float height, float radius)
         {
             using (GraphicsPath gp = new GraphicsPath())
             {
+                gp.AddLine(X + radius, Y, X + width - (radius * 2), Y);
                 gp.AddArc(X + width - (radius * 2), Y, radius * 2, radius * 2, 270, 90);
+                gp.AddLine(X + width, Y + radius, X + width, Y + height - (radius * 2));
                 gp.AddArc(X + width - (radius * 2), Y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
+                gp.AddLine(X + width - (radius * 2), Y + height, X + radius, Y + height);
                 gp.AddArc(X, Y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
+                gp.AddLine(X, Y + height - (radius * 2), X, Y + radius);
                 gp.AddArc(X, Y, radius * 2, radius * 2, 180, 90);
-                g.FillPath(new SolidBrush(p.Color), gp);
-                g.DrawPath(p, gp);
+                gp.CloseFigure();
+
+                using (var br = new SolidBrush(p.Color))
+                {
+                    g.FillPath(br, gp);
+                    g.DrawPath(p, gp);
+                }
             }
         }
-        
+
         #endregion
 
 
@@ -401,14 +543,14 @@ namespace DesktopClient
                         Generate_AddFriendStatus(userAddedFailColor, userAddedFail);
                     }
                 }
-                Scroll.Invalidate();
+                FriendsScroll.Invalidate();
             }
         }
 
         private void AddFriendStatusTimer_Tick(object sender, EventArgs e)
         {
             FriendsListPanel.Controls.Find("AddFriendStatusPanel", false).FirstOrDefault()?.Dispose();
-            Scroll.Invalidate();
+            FriendsScroll.Invalidate();
             AddFriendStatusTimer.Stop();
         }
 
@@ -421,7 +563,7 @@ namespace DesktopClient
         private void Generate_LogOutButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPressColor;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
             but.Size = new Size(100, 40);
@@ -444,7 +586,7 @@ namespace DesktopClient
         private void Generate_SignUpButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPressColor;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
             but.Size = new Size(100, 40);
@@ -470,7 +612,7 @@ namespace DesktopClient
         private void Generate_LogInButton()
         {
             var but = new Button();
-            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPress;
+            but.FlatAppearance.MouseDownBackColor = profilePanelButtonPressColor;
             but.FlatStyle = FlatStyle.Flat;
             but.TabStop = false;
             but.Size = new Size(100, 40);
@@ -691,7 +833,8 @@ namespace DesktopClient
                 try
                 {
                     var answer = await webClient.DownloadStringTaskAsync(url);
-                    userFriends = JsonConvert.DeserializeObject<List<string>>(answer).OrderBy(q => q).ToList();
+                    userFriends = JsonConvert.DeserializeObject<List<string>>(answer);
+                    userFriends.Sort();
                 }
                 catch (WebException)
                 {
@@ -706,7 +849,32 @@ namespace DesktopClient
             client.Headers.Add(HttpRequestHeader.Authorization, $"Basic {Convert.ToBase64String(textBytes)}");
         }
 
+
+
+
         #endregion
 
+
+        #region ChatBox
+
+        private void ChatSendMessageButton_Click(object sender, EventArgs e)
+        {
+            var text = ChatInputMessageText.Text.Trim(' ', '\n');
+            if (!String.IsNullOrEmpty(text))
+            {
+                ChatMessageAddNewPanel(text);
+            }
+
+            ChatInputMessageText.Text = "";
+        }
+
+
+
+        #endregion
+
+        private void ChatCloseButton_Click(object sender, EventArgs e)
+        {
+            ChatPanel.Visible = false;
+        }
     }
 }
