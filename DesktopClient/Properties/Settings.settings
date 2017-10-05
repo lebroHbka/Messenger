@@ -8,17 +8,23 @@
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="loginUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:1000/user/login</Value>
+    <Setting Name="loginPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">user/login</Value>
     </Setting>
-    <Setting Name="signupUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:1000/user/signup</Value>
+    <Setting Name="signuPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">user/signup</Value>
     </Setting>
-    <Setting Name="addFriendUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:1000/user/addfriend=</Value>
+    <Setting Name="addFriendPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">user/addfriend=</Value>
     </Setting>
-    <Setting Name="getFriendsUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:1000/user/friendslist</Value>
+    <Setting Name="getFriendsPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">user/friendslist</Value>
+    </Setting>
+    <Setting Name="commentsDbPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Resources\CommentsDB.db</Value>
+    </Setting>
+    <Setting Name="userServiceUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:1000/</Value>
     </Setting>
   </Settings>
 </SettingsFile>

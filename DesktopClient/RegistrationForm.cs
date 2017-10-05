@@ -35,8 +35,7 @@ namespace DesktopClient
         Point windowPosition;
 
         int authentNotificDelay = 1300;
-        bool isLogInButtEnabled = true;
-        bool isRegistrButtEnabled = true;
+        bool isButtonsEnabled = true;
 
         public RegistrationForm()
         {
@@ -187,8 +186,7 @@ namespace DesktopClient
                     // close form
                     this.Dispose();
                 }
-                isLogInButtEnabled = true;
-                isRegistrButtEnabled = true;
+                isButtonsEnabled = true;
             };
             Timer.Start();
         }
@@ -215,9 +213,9 @@ namespace DesktopClient
 
         private async void LogInButton_Click(object sender, EventArgs e)
         {
-            if (isLogInButtEnabled)
+            if (isButtonsEnabled)
             {
-                isLogInButtEnabled = false;
+                isButtonsEnabled = false;
                 string login = UserLoginField.Text;
                 string password = UserPassField.Text;
 
@@ -243,9 +241,9 @@ namespace DesktopClient
 
         private async void RegistrationButton_Click(object sender, EventArgs e)
         {
-            if (isRegistrButtEnabled)
+            if (isButtonsEnabled)
             {
-                isRegistrButtEnabled = false;
+                isButtonsEnabled = false;
                 string login = UserLoginField.Text;
                 string password = UserPassField.Text;
 

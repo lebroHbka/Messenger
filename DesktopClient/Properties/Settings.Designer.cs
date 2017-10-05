@@ -49,37 +49,55 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/login")]
-        public string loginUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("user/login")]
+        public string loginPath {
             get {
-                return ((string)(this["loginUrl"]));
+                return ((string)(this["loginPath"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/signup")]
-        public string signupUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("user/signup")]
+        public string signuPath {
             get {
-                return ((string)(this["signupUrl"]));
+                return ((string)(this["signuPath"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/addfriend=")]
-        public string addFriendUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("user/addfriend=")]
+        public string addFriendPath {
             get {
-                return ((string)(this["addFriendUrl"]));
+                return ((string)(this["addFriendPath"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/user/friendslist")]
-        public string getFriendsUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("user/friendslist")]
+        public string getFriendsPath {
             get {
-                return ((string)(this["getFriendsUrl"]));
+                return ((string)(this["getFriendsPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources\\CommentsDB.db")]
+        public string commentsDbPath {
+            get {
+                return ((string)(this["commentsDbPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/")]
+        public string userServiceUrl {
+            get {
+                return ((string)(this["userServiceUrl"]));
             }
         }
     }

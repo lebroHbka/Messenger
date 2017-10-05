@@ -19,7 +19,6 @@ namespace MessagesService
 {
     public class UserService : IUserService
     {
-        private 
 
         #region Vars
         static string secretKey;
@@ -61,7 +60,7 @@ namespace MessagesService
             }
         }
 
-        public bool AddFriend(string name)
+        public bool AddFriend(string friendName)
         {
             var usr = Authorization(WebOperationContext.Current);
             if(usr == null)
@@ -69,10 +68,12 @@ namespace MessagesService
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
                 return false;
             }
-            var frd = FindUser(name);
-            if(frd == null)
+            var frd = FindUser(friendName);
+
+            if((frd == null) || (FindFriends(usr.Login).Contains(frd.Login)))
                 return false;
 
+            AddNewFriend(usr.Login, frd.Login);
             return true;
         }
 
@@ -116,6 +117,15 @@ namespace MessagesService
             }
         }
 
+        private void AddNewFriend(string friend1, string friend2)
+        {
+            using (var db = new SQLiteConnection(connectionString))
+            {
+                db.Insert(new Friends() { Friend1_login = friend1, Friend2_login = friend2});
+                db.Commit();
+            }
+        }
+
         private User FindUser(string name)
         {
             User us;
@@ -155,6 +165,8 @@ namespace MessagesService
             }
             return friendsNames;
         }
+
+
 
 
         private string DecodeBase64(string str)

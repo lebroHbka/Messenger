@@ -23,6 +23,7 @@ namespace DesktopClient
         Panel scroll;
 
         int elementsHight;
+
         #endregion
 
         public CustomScrollBar(Panel mainPanel, Panel scroll, int margin = 0)
@@ -43,20 +44,14 @@ namespace DesktopClient
                 }
             };
 
-            mainPanel.MouseWheel += (object sender, MouseEventArgs e) => 
-            {
-                if (e.Delta != 0)
-                {
-                    if (e.Delta > 0)
-                        MoveScroll(-mainPanelHeight / 30);
-                    else
-                        MoveScroll(mainPanelHeight / 30);
-                }
-            };
+            mainPanel.MouseWheel += MouseWheel;
         }
 
         public void AddNewItem<T>(T item, int x = 0) where T: Control
         {
+
+            mainPanel.Controls.Add(item);
+
             int y;
             if (elements.Count == 0)
             {
@@ -68,12 +63,12 @@ namespace DesktopClient
                 y = lastElements.Top + lastElements.Height + margin;
             }
             item.Location = new System.Drawing.Point(x, y);
-            elementsHight += item.Height + margin;
 
             elements.Add(item);
-            mainPanel.Controls.Add(item);
+            elementsHight += item.Height + margin;
+
             FixScroll();
-            MoveScroll(mainPanelHeight);
+            MoveEnd();
         }
 
         public void Clear()
@@ -82,8 +77,29 @@ namespace DesktopClient
             elements.Clear();
             scrollPos = 0;
             elementsHight = 0;
+            mainPanel.Controls.Add(scroll);
         }
 
+        public void MoveStart()
+        {
+            MoveScroll(-mainPanelHeight);
+        }
+
+        public void MoveEnd()
+        {
+            MoveScroll(mainPanelHeight);
+        }
+
+        public void MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta != 0)
+            {
+                if (e.Delta > 0)
+                    MoveScroll(-mainPanelHeight / 30);
+                else
+                    MoveScroll(mainPanelHeight / 30);
+            }
+        }
 
         private int ElementsTotalHeight()
         {
