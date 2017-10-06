@@ -11,6 +11,8 @@ using System.Net;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Drawing.Drawing2D;
+using System.Windows.Threading;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace DesktopClient
 {
@@ -22,6 +24,27 @@ namespace DesktopClient
             Anonymous = 1,
             Logined = 2
         }
+
+        #region Support classes
+
+        // custom class for enabling doubleclick event
+        class ButtonWithDoubleClick : Button
+        {
+            public ButtonWithDoubleClick()
+            {
+                SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, true);
+            }
+        }
+
+        class ChatMessagePanel : Panel
+        {
+            public void ShiftX(int shift)
+            {
+                this.Left += shift;
+            }
+        }
+
+        #endregion
 
         #region Vars
 
@@ -59,6 +82,7 @@ namespace DesktopClient
         Color profilePanelButtonPressColor = Color.FromArgb(255, 152, 204, 253);
 
         Color chatOutcomingMessagesBackColor = Color.FromArgb(255, 49, 74, 94);
+        Color chatIncomingMessagesBackColor = Color.FromArgb(255, 25, 49, 68);
 
         Color chatExitPanelColor = Color.FromArgb(25, 32, 38);
 
@@ -89,6 +113,9 @@ namespace DesktopClient
 
         int chatPanelCurrentWidth;
 
+        event Action<int> moveIncomingMessages;
+
+        IHubProxy hubProxy;
 
         #endregion
 
@@ -103,6 +130,7 @@ namespace DesktopClient
             ControlsSettings();
 
             chatScroll = new CustomScrollBar(ChatMessagesPanel, ChatScroll, 10);
+            ConnectToHub();
         }
 
         
@@ -128,104 +156,6 @@ namespace DesktopClient
             
 
         }
-
-
-
-        #region Custom scroll
-
-        // friend 
-        private void FriendsListAddFriendsPanel()
-        {
-            userFriends.Sort();
-            foreach (var f in userFriends)
-            {
-                friendScroll.AddNewItem(Generate_FriendPanel(f));
-            }
-            friendScroll.MoveStart();
-        }
-
-        private void FriendsListClear()
-        {
-            friendScroll.Clear();
-        }
-        
-
-        // chat 
-        private void ChatOutcomingMessageAddPanel(string text)
-        {
-            //chatScroll.AddNewItem(CreateChatMessagesPanel(text));
-            var panel = Generate_ChatIncomingMessagesPanel(text);
-            chatScroll.AddNewItem(panel, ChatMessagesPanel.Width - panel.Width - 20);
-        }
-
-        private void ChatIncomingMessageAddPanel(string text)
-        {
-            var panel = Generate_ChatOutcomingMessagesPanel(text);
-            chatScroll.AddNewItem(panel, ChatMessagesPanel.Width - panel.Width - 20);
-        }
-
-
-
-        private void ChatMessageClear()
-        {
-            chatScroll.Clear();
-        }
-
-        private void ChatMessagesPanel_Paint(object sender, PaintEventArgs e)
-        {
-            var panel = sender as Panel;
-            panel.SuspendLayout();
-
-            using (Graphics v = e.Graphics)
-            {
-                using (var pen = new Pen(chatOutcomingMessagesBackColor))
-                {
-                    DrawRoundRect(v, pen, panel.ClientRectangle.Left, panel.ClientRectangle.Top, panel.ClientRectangle.Width - 1, panel.ClientRectangle.Height - 1, 10);
-                }
-            }
-
-            panel.ResumeLayout();
-            base.OnPaint(e);
-        }
-
-
-        // scroll paint
-        private void Scroll_Paint(object sender, PaintEventArgs e)
-        {
-            using (Graphics v = e.Graphics)
-            {
-                using (var pen = new Pen(ScrollColor))
-                {
-                    DrawRoundRect(v, pen, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1, 3);
-                }
-            }
-            base.OnPaint(e);
-        }
-
-        // make rounded
-        private void DrawRoundRect(Graphics g, Pen p, float X, float Y, float width, float height, float radius)
-        {
-            using (GraphicsPath gp = new GraphicsPath())
-            {
-                gp.AddLine(X + radius, Y, X + width - (radius * 2), Y);
-                gp.AddArc(X + width - (radius * 2), Y, radius * 2, radius * 2, 270, 90);
-                gp.AddLine(X + width, Y + radius, X + width, Y + height - (radius * 2));
-                gp.AddArc(X + width - (radius * 2), Y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-                gp.AddLine(X + width - (radius * 2), Y + height, X + radius, Y + height);
-                gp.AddArc(X, Y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-                gp.AddLine(X, Y + height - (radius * 2), X, Y + radius);
-                gp.AddArc(X, Y, radius * 2, radius * 2, 180, 90);
-                gp.CloseFigure();
-
-                using (var br = new SolidBrush(p.Color))
-                {
-                    g.FillPath(br, gp);
-                    g.DrawPath(p, gp);
-                }
-            }
-        }
-
-        #endregion
 
 
         #region Exit button
@@ -500,7 +430,8 @@ namespace DesktopClient
 
         #region Generate Controls
 
-        // profile panel
+
+        #region Profile 
         private void Generate_LogOutButton()
         {
             var but = new Button();
@@ -575,9 +506,9 @@ namespace DesktopClient
 
             ProfilePanel.Controls.Add(but);
         }
+        #endregion
 
-
-        // friends panel
+        #region Friends
         private void Generate_LoginToSeeFriendsLabel()
         {
             var l = new Label();
@@ -613,21 +544,10 @@ namespace DesktopClient
             l.Location = new Point((p.Width - l.Width) / 2, 3);
         }
 
-
-        // friend panel
-        class MyButt : Button
-        {
-            // custom class for enabling doubleclick event (wtf?!?)
-            public MyButt()
-            {
-                SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, true);
-            }
-        } 
-
         private Panel Generate_FriendPanel(string name)
         {
             var p = new Panel();
-            var but = new MyButt();
+            var but = new ButtonWithDoubleClick();
             var picBox = new PictureBox();
 
             // custom panel
@@ -664,13 +584,13 @@ namespace DesktopClient
 
             return p;
         }
+        #endregion
 
+        #region Chat
 
-        // chat message panel
-
-        private Panel Generate_ChatMessageTemplate(string text, Color color)
+        private ChatMessagePanel Generate_ChatMessageTemplate(string text, Color color)
         {
-            var p = new Panel();
+            var p = new ChatMessagePanel();
             var rich = new RichTextBox();
 
             p.SuspendLayout();
@@ -708,7 +628,6 @@ namespace DesktopClient
             p.BackColor = Color.Transparent;
             p.Size = new Size(rich.Width + 20, rich.Height + 8);
             p.Margin = new Padding(0, 0, 0, 0);
-            p.Paint += new PaintEventHandler(ChatMessagesPanel_Paint);
 
             rich.ResumeLayout();
             p.ResumeLayout();
@@ -718,22 +637,57 @@ namespace DesktopClient
 
         private Panel Generate_ChatOutcomingMessagesPanel(string text)
         {
-            return Generate_ChatMessageTemplate(text, chatOutcomingMessagesBackColor);
+            var panel = Generate_ChatMessageTemplate(text, chatOutcomingMessagesBackColor);
+            panel.Paint += ChatOutcomingMessagesPanel_Paint;
+
+            return panel;
         }
 
         private Panel Generate_ChatIncomingMessagesPanel(string text)
         {
-            var p = Generate_ChatMessageTemplate(text, chatOutcomingMessagesBackColor);
+            var panel = Generate_ChatMessageTemplate(text, chatIncomingMessagesBackColor);
+            panel.Paint += ChatIncomingMessagesPanel_Paint;
+            moveIncomingMessages += panel.ShiftX;
 
-            p.LocationChanged += P_Resize;
-
-            return p;
+            return panel;
         }
 
-        private void P_Resize(object sender, EventArgs e)
+        private void ChatOutcomingMessagesPanel_Paint(object sender, PaintEventArgs e)
         {
-            Debug.WriteLine(1);
+
+            var panel = sender as Panel;
+            
+            using (Graphics v = e.Graphics)
+            {
+                using (var pen = new Pen(chatOutcomingMessagesBackColor))
+                {
+                    DrawRoundRect(v, pen, panel.ClientRectangle.Left, panel.ClientRectangle.Top, panel.ClientRectangle.Width - 1, panel.ClientRectangle.Height - 1, 10);
+                }
+            }
+
+            base.OnPaint(e);
         }
+
+        private void ChatIncomingMessagesPanel_Paint(object sender, PaintEventArgs e)
+        {
+            var panel = sender as Panel;
+            panel.SuspendLayout();
+
+            using (Graphics v = e.Graphics)
+            {
+                using (var pen = new Pen(chatIncomingMessagesBackColor))
+                {
+                    DrawRoundRect(v, pen, panel.ClientRectangle.Left, panel.ClientRectangle.Top, panel.ClientRectangle.Width - 1, panel.ClientRectangle.Height - 1, 10);
+                }
+            }
+
+            panel.ResumeLayout();
+            base.OnPaint(e);
+        }
+
+
+        #endregion
+
 
         #endregion
 
@@ -899,7 +853,6 @@ namespace DesktopClient
             client.Headers.Add(HttpRequestHeader.Authorization, $"Basic {Convert.ToBase64String(textBytes)}");
         }
 
-
         #endregion
 
         #region ChatBox
@@ -909,6 +862,7 @@ namespace DesktopClient
             ChatFriendName.Text = friendName;
             ChatFixExitPanelPosition();
             ChatPanel.Visible = true;
+            ChatMessageClear();
             RestoreMessages(friendName);
         }
 
@@ -919,6 +873,7 @@ namespace DesktopClient
             {
                 ChatOutcomingMessageAddPanel(text);
                 Messages.AddSendedMsg(userLogin, ChatFriendName.Text, text);
+                hubProxy.Invoke("SendMessage", text);
             }
 
             ChatInputMessageText.Text = "";
@@ -957,6 +912,7 @@ namespace DesktopClient
                 ChatScroll.Left += d;
 
                 chatPanelCurrentWidth = ChatPanel.Width;
+                moveIncomingMessages?.Invoke(d);
             }
         }
 
@@ -972,16 +928,117 @@ namespace DesktopClient
 
         private void RestoreMessages(string friendName)
         {
-            ChatMessageClear();
-            
             foreach (var msg in Messages.GetMessages(userLogin, friendName))
             {
-                ChatOutcomingMessageAddPanel(msg);
+                if(msg.IsReceived == 0)
+                {
+                    ChatOutcomingMessageAddPanel(msg.Message);
+                }
+                else
+                {
+                    ChatIncomingMessageAddPanel(msg.Message);
+                }
             }
             
         }
 
         #endregion
 
+        #region Scroll boxes
+
+        // friend scroll
+        private void FriendsListAddFriendsPanel()
+        {
+            userFriends.Sort();
+            foreach (var f in userFriends)
+            {
+                friendScroll.AddNewItem(Generate_FriendPanel(f));
+            }
+            friendScroll.MoveStart();
+        }
+
+        private void FriendsListClear()
+        {
+            friendScroll.Clear();
+        }
+        
+
+        // chat scroll
+        private void ChatOutcomingMessageAddPanel(string text)
+        {
+            var panel = Generate_ChatOutcomingMessagesPanel(text);
+            chatScroll.AddNewItem(panel);
+        }
+
+        private void ChatIncomingMessageAddPanel(string text)
+        {
+            var panel = Generate_ChatIncomingMessagesPanel(text);
+            chatScroll.AddNewItem(panel, ChatMessagesPanel.Width - panel.Width - 20);
+        }
+
+        private void ChatMessageClear()
+        {
+            chatScroll.Clear();
+            moveIncomingMessages = null;
+        }
+
+
+        // scroll paint
+        private void Scroll_Paint(object sender, PaintEventArgs e)
+        {
+            using (Graphics v = e.Graphics)
+            {
+                using (var pen = new Pen(ScrollColor))
+                {
+                    DrawRoundRect(v, pen, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1, 3);
+                }
+            }
+            base.OnPaint(e);
+        }
+
+        // make rounded
+        private void DrawRoundRect(Graphics g, Pen p, float X, float Y, float width, float height, float radius)
+        {
+            using (GraphicsPath gp = new GraphicsPath())
+            {
+                gp.AddLine(X + radius, Y, X + width - (radius * 2), Y);
+                gp.AddArc(X + width - (radius * 2), Y, radius * 2, radius * 2, 270, 90);
+                gp.AddLine(X + width, Y + radius, X + width, Y + height - (radius * 2));
+                gp.AddArc(X + width - (radius * 2), Y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
+                gp.AddLine(X + width - (radius * 2), Y + height, X + radius, Y + height);
+                gp.AddArc(X, Y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
+                gp.AddLine(X, Y + height - (radius * 2), X, Y + radius);
+                gp.AddArc(X, Y, radius * 2, radius * 2, 180, 90);
+                gp.CloseFigure();
+
+                using (var br = new SolidBrush(p.Color))
+                {
+                    g.FillPath(br, gp);
+                    g.DrawPath(p, gp);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Hub methods
+
+        private void ConnectToHub()
+        {
+            var hub = new HubConnection(Properties.Settings.Default.signalrHubUrl);
+            hubProxy = hub.CreateHubProxy(Properties.Settings.Default.signalrHubName);
+
+            hubProxy.On("GetMessage", (string text) => { GetMessage(text); });
+
+            hub.Start();
+        }
+
+        private void GetMessage(string text)
+        {
+            ChatIncomingMessageAddPanel(text);
+        }
+
+
+        #endregion
     }
 }

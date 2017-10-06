@@ -123,6 +123,16 @@ namespace DesktopClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PasswordIcon {
+            get {
+                object obj = ResourceManager.GetObject("PasswordIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap sideBarMenuFriends {
             get {
                 object obj = ResourceManager.GetObject("sideBarMenuFriends", resourceCulture);
@@ -146,6 +156,16 @@ namespace DesktopClient.Properties {
         internal static System.Drawing.Bitmap sideBarMenuSettings {
             get {
                 object obj = ResourceManager.GetObject("sideBarMenuSettings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap userLogin {
+            get {
+                object obj = ResourceManager.GetObject("userLogin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

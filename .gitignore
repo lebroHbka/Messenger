@@ -8,3 +8,6 @@ TokenService/obj
 TokenService/Properties/PublishProfiles
 TokenService/Web.Debug.config
 TokenService/Web.Release.config
+ChatHub/bin
+ChatHub/obj
+ChatHub/Properties

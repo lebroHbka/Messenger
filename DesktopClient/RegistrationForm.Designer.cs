@@ -122,7 +122,7 @@
             // 
             // PasswordPic
             // 
-            this.PasswordPic.Image = ((System.Drawing.Image)(resources.GetObject("PasswordPic.Image")));
+            this.PasswordPic.Image = global::DesktopClient.Properties.Resources.PasswordIcon;
             this.PasswordPic.Location = new System.Drawing.Point(4, 6);
             this.PasswordPic.Name = "PasswordPic";
             this.PasswordPic.Size = new System.Drawing.Size(20, 20);
@@ -143,7 +143,7 @@
             // 
             // LogginPic
             // 
-            this.LogginPic.Image = ((System.Drawing.Image)(resources.GetObject("LogginPic.Image")));
+            this.LogginPic.Image = global::DesktopClient.Properties.Resources.userLogin;
             this.LogginPic.Location = new System.Drawing.Point(4, 6);
             this.LogginPic.Name = "LogginPic";
             this.LogginPic.Size = new System.Drawing.Size(20, 20);

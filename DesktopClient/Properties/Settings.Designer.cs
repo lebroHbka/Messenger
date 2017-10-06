@@ -100,5 +100,23 @@ namespace DesktopClient.Properties {
                 return ((string)(this["userServiceUrl"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost/signalr")]
+        public string signalrHubUrl {
+            get {
+                return ((string)(this["signalrHubUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ChatHub")]
+        public string signalrHubName {
+            get {
+                return ((string)(this["signalrHubName"]));
+            }
+        }
     }
 }

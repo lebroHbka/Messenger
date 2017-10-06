@@ -46,15 +46,14 @@ namespace DesktopClient
             }
         }
 
-        public static IEnumerable<string> GetMessages(string userName, string friendName)
+        public static IEnumerable<MessageFormat> GetMessages(string userName, string friendName)
         {
-            IEnumerable<string> msgs;
+            IEnumerable<MessageFormat> msgs;
             var command = $"select * from {userName} where friend='{friendName}'";
 
             using (var db = new SQLiteConnection(connectionString))
             {
-                msgs = db.CreateCommand(command).ExecuteQuery<MessageFormat>()
-                                                .Select(u => u.Message);                                                ;
+                msgs = db.CreateCommand(command).ExecuteQuery<MessageFormat>();
             }
             return msgs;
         }

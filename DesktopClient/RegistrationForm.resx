@@ -118,25 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="PasswordPic.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAARxJREFUOE+t
-        k1sNwzAMRQthEAbBH+00TUtVCIMwCIMwBoUwCINQCIVQCIGwXTt2n8keaq/kj/hxErtu9quIqh0dyjsV
-        ZUuF85S7J581/J+oOBEgHewVMfhPpKnfJS8LrzKAn52D5edKSz4rtGmFAOECDc1iuGgUS0pmZUWRAviv
-        fTx3N3WnhUSdXdmqa6Ehx3l1pYWkhyWnWhp18RNwaAlwdfcKH+17FxPNvmqtboNZB5NYVFpQ07Haj4rM
-        GhhWqD93qZGIBDbMBsW83JH9C+bp4C5autQMZibz49XQGOYmF9TRl5kzDpsu9EcJIAzWy6zWwFgoqgWG
-        f3E1jIXCZjMYS1reCsYCgFveBsYSwFYwFkD8r/LGN6thWZa9AQW74g1MmzYxAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="LogginPic.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAL5JREFUOE9j
-        GBBgYOAgYGBqZQDlkg8gBtnuB+L3QPwfSidApUkHBia266EGoeP5UCWkAaBGmMvQ8XuoEuIB1LvYDANj
-        qDLSAFAjDhfanYcqIQ0ANd/HNIxMA/F7mVwXmtgWYDXQzDYAqoQ0gMOV96HS5AEDM7sGFAOBroZKkQcw
-        DKQopyCyHrKB+6HSxAMDCwcFoMZ+IMaVU0DJqR+kDqoFO4C6CJ9BmBhfmOIpDPBjbIYSyrsEMOmFxQAB
-        BgYA5qPLeW8E50sAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="ExitButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAO9JREFUSEvt

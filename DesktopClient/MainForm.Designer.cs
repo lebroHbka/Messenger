@@ -194,7 +194,7 @@
             // 
             this.HeaderExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HeaderExitButton.Image = global::DesktopClient.Properties.Resources.ExitButton;
-            this.HeaderExitButton.Location = new System.Drawing.Point(619, 4);
+            this.HeaderExitButton.Location = new System.Drawing.Point(619, 5);
             this.HeaderExitButton.Name = "HeaderExitButton";
             this.HeaderExitButton.Size = new System.Drawing.Size(30, 30);
             this.HeaderExitButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -262,7 +262,7 @@
             this.AddFriendName.DetectUrls = false;
             this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddFriendName.ForeColor = System.Drawing.Color.White;
-            this.AddFriendName.Location = new System.Drawing.Point(-85, 0);
+            this.AddFriendName.Location = new System.Drawing.Point(-87, 0);
             this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
             this.AddFriendName.MaxLength = 10;
             this.AddFriendName.Multiline = false;
@@ -314,6 +314,7 @@
             this.ChatPanel.Name = "ChatPanel";
             this.ChatPanel.Size = new System.Drawing.Size(660, 410);
             this.ChatPanel.TabIndex = 2;
+            this.ChatPanel.Visible = false;
             // 
             // ChatExitPanel
             // 
