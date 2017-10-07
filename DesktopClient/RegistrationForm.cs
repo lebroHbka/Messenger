@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -35,6 +36,8 @@ namespace DesktopClient
         Point windowPosition;
 
         int authentNotificDelay = 1300;
+        int serverOfflineNotidDelay = 1000;
+
         bool isButtonsEnabled = true;
 
         public RegistrationForm()
@@ -219,13 +222,19 @@ namespace DesktopClient
                 string login = UserLoginField.Text;
                 string password = UserPassField.Text;
 
-                if (await MainForm.LogInUser(login, password))
+                var status = await MainForm.LogInUser(login, password);
+                if (status == MainForm.ConnectStatus.Ok)
                 {
                     AuthenticationNotification(AuthenticationStatus.Ok, authentNotificDelay, true);
                 }
-                else
+                else if (status == MainForm.ConnectStatus.Fail)
                 {
                     AuthenticationNotification(AuthenticationStatus.Fail, authentNotificDelay, false);
+                }
+                else
+                {
+                    isButtonsEnabled = true;
+                    ServiceOfflineNotification();
                 }
             }
         }
@@ -247,13 +256,19 @@ namespace DesktopClient
                 string login = UserLoginField.Text;
                 string password = UserPassField.Text;
 
-                if (await MainForm.RegisterUser(login, password))
+                var status = await MainForm.RegisterUser(login, password);
+                if (status == MainForm.ConnectStatus.Ok)
                 {
                     AuthenticationNotification(AuthenticationStatus.Ok, authentNotificDelay, true);
                 }
-                else
+                else if (status == MainForm.ConnectStatus.Fail)
                 {
                     AuthenticationNotification(AuthenticationStatus.Fail, authentNotificDelay, false);
+                }
+                else
+                {
+                    isButtonsEnabled = true;
+                    ServiceOfflineNotification();
                 }
             }
         }
@@ -261,6 +276,24 @@ namespace DesktopClient
         private void AuthenticationSignUpTab_Click(object sender, EventArgs e)
         {
             ActivateSignUpTab();
+        }
+
+        #endregion
+
+        #region Offline service
+
+        private void ServiceOfflineNotification()
+        {
+            ServerOfflineTimer.Stop();
+            ServerOfflinePanel.Visible = true;
+            ServerOfflineTimer.Interval = serverOfflineNotidDelay;
+            ServerOfflineTimer.Start();
+        }
+
+        private void ServerOfflineTimer_Tick(object sender, EventArgs e)
+        {
+            ServerOfflinePanel.Visible = false;
+            ServerOfflineTimer.Stop();
         }
 
         #endregion
@@ -283,5 +316,6 @@ namespace DesktopClient
                                     borderColor, 3, ButtonBorderStyle.Solid,
                                     borderColor, 3, ButtonBorderStyle.Solid);
         }
+
     }
 }

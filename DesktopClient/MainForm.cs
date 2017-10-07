@@ -18,11 +18,18 @@ namespace DesktopClient
 {
     public partial class MainForm : Form
     {
-        enum Status
+        enum UserStatus
         {
             Default = 0,
             Anonymous = 1,
             Logined = 2
+        }
+
+        public enum ConnectStatus
+        {
+            Ok = 1,
+            Fail = 2,
+            ServiceNotAvailable = 3
         }
 
         #region Support classes
@@ -59,7 +66,7 @@ namespace DesktopClient
         string userPassword;
         string userToken;
 
-        Status userStatus = Status.Default;
+        UserStatus userStatus = UserStatus.Default;
         List<string> userFriends = new List<string>();
 
         #endregion
@@ -93,6 +100,8 @@ namespace DesktopClient
         int menuToggleSpeed = 50;
 
         int userAddFriendNotifDelay = 1500;
+        int friendOfflineNotifDelay = 1000;
+        int serverOfflineNotidDelay = 1000;
 
         #region Scrolls
 
@@ -104,17 +113,20 @@ namespace DesktopClient
 
         Dictionary<PictureBox, Panel> activeSideBar = new Dictionary<PictureBox, Panel>();
 
-        Dictionary<Status, string> statuses = new Dictionary<Status, string>
+        Dictionary<UserStatus, string> statuses = new Dictionary<UserStatus, string>
         {
-            { Status.Anonymous, "Anonymous"},
+            { UserStatus.Anonymous, "Anonymous"},
         };
 
         int messagePanelMaxWidth = 250;
 
         int chatPanelCurrentWidth;
 
+
+
         event Action<int> moveIncomingMessages;
 
+        HubConnection hub;
         IHubProxy hubProxy;
 
         #endregion
@@ -130,7 +142,6 @@ namespace DesktopClient
             ControlsSettings();
 
             chatScroll = new CustomScrollBar(ChatMessagesPanel, ChatScroll, 10);
-            ConnectToHub();
         }
 
         
@@ -139,6 +150,11 @@ namespace DesktopClient
             ChatPanel.Resize += ChatResize;
 
             chatPanelCurrentWidth = ChatPanel.Width;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DisconnectFromHub();
         }
 
         private void ControlsSettings()
@@ -161,6 +177,7 @@ namespace DesktopClient
         #region Exit button
         private void ExitButton_Click(object sender, EventArgs e)
         {
+            DisconnectFromHub();
             Application.Exit();
         }
 
@@ -317,7 +334,7 @@ namespace DesktopClient
             Generate_LogInButton();
             Generate_SignUpButton();
 
-            ProfilepanelLoginLabel.Text = statuses[Status.Anonymous];
+            ProfilepanelLoginLabel.Text = statuses[UserStatus.Anonymous];
             ProfilepanelLoginLabel.Left = (menuNormalWidth - ProfilepanelLoginLabel.Width) / 2;
 
             ProfilePanel.Refresh();
@@ -394,19 +411,27 @@ namespace DesktopClient
                         AddFriendStatusTimer.Start();
                         Generate_AddFriendStatus(userAddedFailColor, userAddedFriendExists);
                     }
-                    else if (await AddFriend(friendName))
+                    else 
                     {
-                        FriendsListClear();
+                        var status = await AddFriend(friendName);
+                        if(status == ConnectStatus.Ok)
+                        {
+                            FriendsListClear();
 
-                        AddFriendStatusTimer.Start();
-                        Generate_AddFriendStatus(userAddedSuccessColor, userAddedSuccess);
+                            AddFriendStatusTimer.Start();
+                            Generate_AddFriendStatus(userAddedSuccessColor, userAddedSuccess);
 
-                        FriendsListAddFriendsPanel();
-                    }
-                    else
-                    {
-                        AddFriendStatusTimer.Start();
-                        Generate_AddFriendStatus(userAddedFailColor, userAddedFail);
+                            FriendsListAddFriendsPanel();
+                        }
+                        else if (status == ConnectStatus.ServiceNotAvailable)
+                        {
+                            ServiceOfflineNotification();
+                        }
+                        else
+                        {
+                            AddFriendStatusTimer.Start();
+                            Generate_AddFriendStatus(userAddedFailColor, userAddedFail);
+                        }
                     }
                 }
                 FriendsScroll.Invalidate();
@@ -447,7 +472,7 @@ namespace DesktopClient
             but.UseVisualStyleBackColor = true;
             but.Click += (object sender, EventArgs e) =>
             {
-                UpdateUserInfo(statuses[Status.Anonymous], "");
+                UpdateUserInfo(statuses[UserStatus.Anonymous], "");
                 SaveUserInfo();
                 UserNotLogined();
             };
@@ -580,6 +605,7 @@ namespace DesktopClient
             but.DoubleClick += (object sender, EventArgs e) =>
             {
                 ChatOpen(but.Text);
+
             };
 
             return p;
@@ -695,6 +721,8 @@ namespace DesktopClient
 
         private async void UserLogined(string login, string password)
         {
+            ChatSendMessageButton.Enabled = false;
+
             UpdateUserInfo(login, password);
             SaveUserInfo();
             Messages.CreateUserTable(userLogin);
@@ -704,18 +732,23 @@ namespace DesktopClient
             await GetFriends(userLogin, userPassword);
             FriendsPanelStatusLogined();
 
-            userStatus = Status.Logined;
+            userStatus = UserStatus.Logined;
+            await ConnectToHub();
+            ChatSendMessageButton.Enabled = true;
         }
 
         private void UserNotLogined()
         {
-            UpdateUserInfo(statuses[Status.Anonymous], "");
+            UpdateUserInfo(statuses[UserStatus.Anonymous], "");
             SaveUserInfo();
 
             ProfilePanelStatusUnlogin();
             FriendsPanelStatusUnlogin();
 
-            userStatus = Status.Anonymous;
+            ChatPanel.Visible = false;
+
+            userStatus = UserStatus.Anonymous;
+            DisconnectFromHub();
         }
 
         private void UpdateUserInfo(string name, string pass)
@@ -740,9 +773,13 @@ namespace DesktopClient
         private async void StartUserSettings()
         {
             LoadUserInfo();
-            if(userLogin != statuses[Status.Anonymous])
+            if(userLogin != statuses[UserStatus.Anonymous])
             {
-                await LogInUser(userLogin, userPassword);
+                if(await LogInUser(userLogin, userPassword) == ConnectStatus.ServiceNotAvailable)
+                {
+                    ServiceOfflineNotification();
+                    UserNotLogined();
+                }
             }
             else
             {
@@ -754,7 +791,7 @@ namespace DesktopClient
 
         #region Connect with service
 
-        public async Task<bool> LogInUser(string login, string password)
+        public async Task<ConnectStatus> LogInUser(string login, string password)
         {
             string result;
             var url = Properties.Settings.Default.userServiceUrl + Properties.Settings.Default.loginPath;
@@ -769,20 +806,20 @@ namespace DesktopClient
                 }
                 catch(WebException)
                 {
-                    result = null;
+                    return ConnectStatus.ServiceNotAvailable;
                 }
             }
             if (!String.IsNullOrEmpty(result))
             {
                 userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
                 UserLogined(login, password);
-                return true;
+                return ConnectStatus.Ok;
             }
             UserNotLogined();
-            return false;
+            return ConnectStatus.Fail;
         }
 
-        public async Task<bool> RegisterUser(string login, string password)
+        public async Task<ConnectStatus> RegisterUser(string login, string password)
         {
             string result;
             var loginUrl = Properties.Settings.Default.userServiceUrl + Properties.Settings.Default.signuPath;
@@ -790,19 +827,26 @@ namespace DesktopClient
             using (WebClient webClient = new WebClient())
             {
                 webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
-                var uss = new TokenService.User() { Login = login, Password = password };
-                result = await webClient.UploadStringTaskAsync(loginUrl, "POST", JsonConvert.SerializeObject(uss));
+                try
+                {
+                    var uss = new TokenService.User() { Login = login, Password = password };
+                    result = await webClient.UploadStringTaskAsync(loginUrl, "POST", JsonConvert.SerializeObject(uss));
+                }
+                catch (WebException)
+                {
+                    return ConnectStatus.ServiceNotAvailable;
+                }
             }
             if (!String.IsNullOrEmpty(result))
             {
                 userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
                 UserLogined(login, password);
-                return true;
+                return ConnectStatus.Ok;
             }
-            return false;
+            return ConnectStatus.Fail;
         }
 
-        private async Task<bool> AddFriend(string name)
+        private async Task<ConnectStatus> AddFriend(string name)
         {
             bool result;
             string url = Properties.Settings.Default.userServiceUrl + Properties.Settings.Default.addFriendPath + name;
@@ -818,13 +862,13 @@ namespace DesktopClient
                 }
                 catch (WebException)
                 {
-                    return false;
+                    return ConnectStatus.ServiceNotAvailable;
                 }
             }
             if(result)
                 userFriends.Add(name);
 
-            return result;
+            return ConnectStatus.Ok;
         }
 
         private async Task GetFriends(string login, string password)
@@ -853,7 +897,29 @@ namespace DesktopClient
             client.Headers.Add(HttpRequestHeader.Authorization, $"Basic {Convert.ToBase64String(textBytes)}");
         }
 
+
+        #region Offline service
+
+        private void ServiceOfflineNotification()
+        {
+            ServerOfflineNotificationTimer.Stop();
+            ServerOfflinePanel.Visible = true;
+            ServerOfflineNotificationTimer.Interval = serverOfflineNotidDelay;
+            ServerOfflineNotificationTimer.Start();
+        }
+
+        private void ServerOfflineNotificationTimer_Tick(object sender, EventArgs e)
+        {
+            ServerOfflinePanel.Visible = false;
+            ServerOfflineNotificationTimer.Stop();
+        }
+
         #endregion
+
+
+        #endregion
+
+
 
         #region ChatBox
 
@@ -864,6 +930,9 @@ namespace DesktopClient
             ChatPanel.Visible = true;
             ChatMessageClear();
             RestoreMessages(friendName);
+
+            // close friend panel
+            ToggleSideBarMenuButton(sideBarFriends, FriendsPanel);
         }
 
         private void ChatSendMessageButton_Click(object sender, EventArgs e)
@@ -871,9 +940,7 @@ namespace DesktopClient
             var text = ChatInputMessageText.Text.Trim(' ', '\n');
             if (!String.IsNullOrEmpty(text))
             {
-                ChatOutcomingMessageAddPanel(text);
-                Messages.AddSendedMsg(userLogin, ChatFriendName.Text, text);
-                hubProxy.Invoke("SendMessage", text);
+                SendMessage(text, ChatFriendName.Text);
             }
 
             ChatInputMessageText.Text = "";
@@ -940,6 +1007,12 @@ namespace DesktopClient
                 }
             }
             
+        }
+
+        private void FriendOfflineTimer_Tick(object sender, EventArgs e)
+        {
+            ChatFriendOfflinePanel.Visible = false;
+            FriendOfflineTimer.Stop();
         }
 
         #endregion
@@ -1023,22 +1096,52 @@ namespace DesktopClient
 
         #region Hub methods
 
-        private void ConnectToHub()
+        private async Task ConnectToHub()
         {
-            var hub = new HubConnection(Properties.Settings.Default.signalrHubUrl);
+            var queryString = $"Token={userToken}";
+            hub = new HubConnection(Properties.Settings.Default.signalrHubUrl, queryString);
+            
             hubProxy = hub.CreateHubProxy(Properties.Settings.Default.signalrHubName);
 
-            hubProxy.On("GetMessage", (string text) => { GetMessage(text); });
+            hubProxy.On("GetMessage", (string text, string fromFriend) => { GetMessage(text, fromFriend); });
 
-            hub.Start();
+            await hub.Start();
         }
 
-        private void GetMessage(string text)
+        private void DisconnectFromHub()
         {
-            ChatIncomingMessageAddPanel(text);
+            hub?.Stop();
         }
 
+        private void GetMessage(string text, string fromFriend)
+        {
+            BeginInvoke(new Action(()=> 
+            {
+                if (userFriends.Contains(fromFriend))
+                {
+                    Messages.AddMessage(userLogin, fromFriend, text, true);
+                    ChatIncomingMessageAddPanel(text);
+                }
+            }));
+        }
+
+        private async void SendMessage(string text, string friendName)
+        {
+            if(await hubProxy.Invoke<bool>("SendMessage", text, friendName))
+            {
+                ChatOutcomingMessageAddPanel(text);
+                Messages.AddMessage(userLogin, friendName, text, false);
+            }
+            else
+            {
+                FriendOfflineTimer.Stop();
+                FriendOfflineTimer.Interval = friendOfflineNotifDelay;
+                ChatFriendOfflinePanel.Visible = true;
+                FriendOfflineTimer.Start();
+            }
+        }
 
         #endregion
+
     }
 }

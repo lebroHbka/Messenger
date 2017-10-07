@@ -184,7 +184,7 @@ namespace MessagesService
             {
                 Subject = new ClaimsIdentity(new[]
                     {
-                        new Claim(ClaimTypes.Name, user.Login)
+                        new Claim(ClaimTypes.NameIdentifier, user.Login)
                     }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symetricKey), SecurityAlgorithms.HmacSha256Signature)
             };

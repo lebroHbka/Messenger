@@ -49,7 +49,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("user/login")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/user/login")]
         public string loginPath {
             get {
                 return ((string)(this["loginPath"]));
@@ -58,7 +58,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("user/signup")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/user/signup")]
         public string signuPath {
             get {
                 return ((string)(this["signuPath"]));
@@ -67,7 +67,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("user/addfriend=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/user/addfriend=")]
         public string addFriendPath {
             get {
                 return ((string)(this["addFriendPath"]));
@@ -76,7 +76,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("user/friendslist")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/user/friendslist")]
         public string getFriendsPath {
             get {
                 return ((string)(this["getFriendsPath"]));
@@ -94,7 +94,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:1000")]
         public string userServiceUrl {
             get {
                 return ((string)(this["userServiceUrl"]));

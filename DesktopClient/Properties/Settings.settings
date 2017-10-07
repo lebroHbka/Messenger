@@ -9,22 +9,22 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="loginPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">user/login</Value>
+      <Value Profile="(Default)">/user/login</Value>
     </Setting>
     <Setting Name="signuPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">user/signup</Value>
+      <Value Profile="(Default)">/user/signup</Value>
     </Setting>
     <Setting Name="addFriendPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">user/addfriend=</Value>
+      <Value Profile="(Default)">/user/addfriend=</Value>
     </Setting>
     <Setting Name="getFriendsPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">user/friendslist</Value>
+      <Value Profile="(Default)">/user/friendslist</Value>
     </Setting>
     <Setting Name="commentsDbPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Resources\CommentsDB.db</Value>
     </Setting>
     <Setting Name="userServiceUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:1000/</Value>
+      <Value Profile="(Default)">http://localhost:1000</Value>
     </Setting>
     <Setting Name="signalrHubUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost/signalr</Value>

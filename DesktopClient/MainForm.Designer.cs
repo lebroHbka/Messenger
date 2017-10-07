@@ -39,6 +39,10 @@
             this.ProfilepanelAvatarPic = new System.Windows.Forms.PictureBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.FormHeader = new System.Windows.Forms.Panel();
+            this.ServerOfflinePanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ChatFriendOfflinePanel = new System.Windows.Forms.Panel();
+            this.ChatFriendOfflineLabel = new System.Windows.Forms.Label();
             this.HeaderExitButton = new System.Windows.Forms.PictureBox();
             this.SideBarCloseTimer = new System.Windows.Forms.Timer(this.components);
             this.FriendsPanel = new System.Windows.Forms.Panel();
@@ -61,6 +65,8 @@
             this.welcomePicture = new System.Windows.Forms.PictureBox();
             this.welcomeLabel = new System.Windows.Forms.Label();
             this.AddFriendStatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.FriendOfflineTimer = new System.Windows.Forms.Timer(this.components);
+            this.ServerOfflineNotificationTimer = new System.Windows.Forms.Timer(this.components);
             this.sideBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sideBarFriends)).BeginInit();
@@ -68,6 +74,8 @@
             this.ProfilePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProfilepanelAvatarPic)).BeginInit();
             this.FormHeader.SuspendLayout();
+            this.ServerOfflinePanel.SuspendLayout();
+            this.ChatFriendOfflinePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderExitButton)).BeginInit();
             this.FriendsPanel.SuspendLayout();
             this.FriendsListPanel.SuspendLayout();
@@ -179,6 +187,8 @@
             // 
             // FormHeader
             // 
+            this.FormHeader.Controls.Add(this.ServerOfflinePanel);
+            this.FormHeader.Controls.Add(this.ChatFriendOfflinePanel);
             this.FormHeader.Controls.Add(this.HeaderExitButton);
             this.FormHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.FormHeader.Location = new System.Drawing.Point(40, 0);
@@ -189,6 +199,49 @@
             this.FormHeader.MouseClick += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseClick);
             this.FormHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseDown);
             this.FormHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormHeader_MouseMove);
+            // 
+            // ServerOfflinePanel
+            // 
+            this.ServerOfflinePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ServerOfflinePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(9)))), ((int)(((byte)(9)))));
+            this.ServerOfflinePanel.Controls.Add(this.label1);
+            this.ServerOfflinePanel.Location = new System.Drawing.Point(265, 0);
+            this.ServerOfflinePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ServerOfflinePanel.Name = "ServerOfflinePanel";
+            this.ServerOfflinePanel.Size = new System.Drawing.Size(130, 40);
+            this.ServerOfflinePanel.TabIndex = 13;
+            this.ServerOfflinePanel.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(9, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(112, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Server is offline";
+            // 
+            // ChatFriendOfflinePanel
+            // 
+            this.ChatFriendOfflinePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChatFriendOfflinePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(9)))), ((int)(((byte)(9)))));
+            this.ChatFriendOfflinePanel.Controls.Add(this.ChatFriendOfflineLabel);
+            this.ChatFriendOfflinePanel.Location = new System.Drawing.Point(265, 0);
+            this.ChatFriendOfflinePanel.Name = "ChatFriendOfflinePanel";
+            this.ChatFriendOfflinePanel.Size = new System.Drawing.Size(130, 40);
+            this.ChatFriendOfflinePanel.TabIndex = 11;
+            this.ChatFriendOfflinePanel.Visible = false;
+            // 
+            // ChatFriendOfflineLabel
+            // 
+            this.ChatFriendOfflineLabel.AutoSize = true;
+            this.ChatFriendOfflineLabel.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ChatFriendOfflineLabel.Location = new System.Drawing.Point(22, 10);
+            this.ChatFriendOfflineLabel.Name = "ChatFriendOfflineLabel";
+            this.ChatFriendOfflineLabel.Size = new System.Drawing.Size(86, 20);
+            this.ChatFriendOfflineLabel.TabIndex = 0;
+            this.ChatFriendOfflineLabel.Text = "User offline";
             // 
             // HeaderExitButton
             // 
@@ -262,7 +315,7 @@
             this.AddFriendName.DetectUrls = false;
             this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddFriendName.ForeColor = System.Drawing.Color.White;
-            this.AddFriendName.Location = new System.Drawing.Point(-87, 0);
+            this.AddFriendName.Location = new System.Drawing.Point(-81, 0);
             this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
             this.AddFriendName.MaxLength = 10;
             this.AddFriendName.Multiline = false;
@@ -318,6 +371,7 @@
             // 
             // ChatExitPanel
             // 
+            this.ChatExitPanel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ChatExitPanel.Location = new System.Drawing.Point(206, 4);
             this.ChatExitPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ChatExitPanel.Name = "ChatExitPanel";
@@ -434,6 +488,14 @@
             // 
             this.AddFriendStatusTimer.Tick += new System.EventHandler(this.AddFriendStatusTimer_Tick);
             // 
+            // FriendOfflineTimer
+            // 
+            this.FriendOfflineTimer.Tick += new System.EventHandler(this.FriendOfflineTimer_Tick);
+            // 
+            // ServerOfflineNotificationTimer
+            // 
+            this.ServerOfflineNotificationTimer.Tick += new System.EventHandler(this.ServerOfflineNotificationTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -451,6 +513,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MoonChat";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.sideBarMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sideBarSettings)).EndInit();
@@ -460,6 +523,10 @@
             this.ProfilePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProfilepanelAvatarPic)).EndInit();
             this.FormHeader.ResumeLayout(false);
+            this.ServerOfflinePanel.ResumeLayout(false);
+            this.ServerOfflinePanel.PerformLayout();
+            this.ChatFriendOfflinePanel.ResumeLayout(false);
+            this.ChatFriendOfflinePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderExitButton)).EndInit();
             this.FriendsPanel.ResumeLayout(false);
             this.FriendsListPanel.ResumeLayout(false);
@@ -508,6 +575,12 @@
         private System.Windows.Forms.Panel ChatDecoratePanel1;
         private System.Windows.Forms.Panel ChatDecoratePanel2;
         private System.Windows.Forms.Panel ChatExitPanel;
+        private System.Windows.Forms.Panel ChatFriendOfflinePanel;
+        private System.Windows.Forms.Label ChatFriendOfflineLabel;
+        private System.Windows.Forms.Timer FriendOfflineTimer;
+        private System.Windows.Forms.Panel ServerOfflinePanel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer ServerOfflineNotificationTimer;
     }
 }
 

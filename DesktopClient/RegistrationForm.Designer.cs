@@ -47,6 +47,9 @@
             this.MainPanel = new System.Windows.Forms.Panel();
             this.Timer = new System.Windows.Forms.Timer(this.components);
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.ServerOfflinePanel = new System.Windows.Forms.Panel();
+            this.ChatFriendOfflineLabel = new System.Windows.Forms.Label();
+            this.ServerOfflineTimer = new System.Windows.Forms.Timer(this.components);
             this.LoginPanel.SuspendLayout();
             this.HelpPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PasswordPic)).BeginInit();
@@ -55,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ExitButton)).BeginInit();
             this.FormHeader.SuspendLayout();
             this.MainPanel.SuspendLayout();
+            this.ServerOfflinePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // LoginPanel
@@ -262,6 +266,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.FormHeader.BackColor = System.Drawing.Color.Transparent;
+            this.FormHeader.Controls.Add(this.ServerOfflinePanel);
             this.FormHeader.Controls.Add(this.ExitButton);
             this.FormHeader.Location = new System.Drawing.Point(0, 0);
             this.FormHeader.Margin = new System.Windows.Forms.Padding(0);
@@ -302,6 +307,31 @@
             this.StatusPanel.Visible = false;
             this.StatusPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.AuthenticationStatusPanel_Paint);
             // 
+            // ServerOfflinePanel
+            // 
+            this.ServerOfflinePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(9)))), ((int)(((byte)(9)))));
+            this.ServerOfflinePanel.Controls.Add(this.ChatFriendOfflineLabel);
+            this.ServerOfflinePanel.Location = new System.Drawing.Point(285, 0);
+            this.ServerOfflinePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ServerOfflinePanel.Name = "ServerOfflinePanel";
+            this.ServerOfflinePanel.Size = new System.Drawing.Size(130, 40);
+            this.ServerOfflinePanel.TabIndex = 12;
+            this.ServerOfflinePanel.Visible = false;
+            // 
+            // ChatFriendOfflineLabel
+            // 
+            this.ChatFriendOfflineLabel.AutoSize = true;
+            this.ChatFriendOfflineLabel.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ChatFriendOfflineLabel.Location = new System.Drawing.Point(9, 10);
+            this.ChatFriendOfflineLabel.Name = "ChatFriendOfflineLabel";
+            this.ChatFriendOfflineLabel.Size = new System.Drawing.Size(112, 20);
+            this.ChatFriendOfflineLabel.TabIndex = 0;
+            this.ChatFriendOfflineLabel.Text = "Server is offline";
+            // 
+            // ServerOfflineTimer
+            // 
+            this.ServerOfflineTimer.Tick += new System.EventHandler(this.ServerOfflineTimer_Tick);
+            // 
             // RegistrationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -326,6 +356,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ExitButton)).EndInit();
             this.FormHeader.ResumeLayout(false);
             this.MainPanel.ResumeLayout(false);
+            this.ServerOfflinePanel.ResumeLayout(false);
+            this.ServerOfflinePanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -348,5 +380,8 @@
         private System.Windows.Forms.Timer Timer;
         private System.Windows.Forms.Panel MainPanel;
         private System.Windows.Forms.Panel StatusPanel;
+        private System.Windows.Forms.Panel ServerOfflinePanel;
+        private System.Windows.Forms.Label ChatFriendOfflineLabel;
+        private System.Windows.Forms.Timer ServerOfflineTimer;
     }
 }

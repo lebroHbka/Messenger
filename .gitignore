@@ -10,4 +10,5 @@ TokenService/Web.Debug.config
 TokenService/Web.Release.config
 ChatHub/bin
 ChatHub/obj
-ChatHub/Properties
+ChatHub/Properties/PublishProfiles
+ChatHub/Scripts
