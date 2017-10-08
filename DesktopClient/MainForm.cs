@@ -13,11 +13,14 @@ using Newtonsoft.Json;
 using System.Drawing.Drawing2D;
 using System.Windows.Threading;
 using Microsoft.AspNet.SignalR.Client;
+using System.Media;
 
 namespace DesktopClient
 {
     public partial class MainForm : Form
     {
+        #region Enums
+
         enum UserStatus
         {
             Default = 0,
@@ -31,6 +34,8 @@ namespace DesktopClient
             Fail = 2,
             ServiceNotAvailable = 3
         }
+
+        #endregion
 
         #region Support classes
 
@@ -55,10 +60,23 @@ namespace DesktopClient
 
         #region Vars
 
+        #region Consts
+
         const string userAddedSuccess = "User added";
         const string userAddedFail = "No such user";
         const string userAddedYourSelf = "Can't add yourself";
         const string userAddedFriendExists = "User already exists";
+
+        const int userAddFriendNotifDelay = 1500;
+        const int friendOfflineNotifDelay = 1000;
+        const int serverOfflineNotidDelay = 1000;
+
+        const int menuNormalWidth = 170;
+        const int menuToggleSpeed = 50;
+
+        const int messagePanelMaxWidth = 250;
+
+        #endregion
 
         #region User info
 
@@ -68,6 +86,11 @@ namespace DesktopClient
 
         UserStatus userStatus = UserStatus.Default;
         List<string> userFriends = new List<string>();
+        List<MessageFormat> userNewMessages = new List<MessageFormat>();
+
+        HashSet<string> userFriendsTheirMsgNotReaded;
+
+        SoundPlayer addFriendSound;
 
         #endregion
 
@@ -93,15 +116,9 @@ namespace DesktopClient
 
         Color chatExitPanelColor = Color.FromArgb(25, 32, 38);
 
+        Color newMessageNotificationColor = Color.FromArgb(255, 244, 197, 66);
+
         #endregion
-
-        Point windowPosition;
-        int menuNormalWidth = 170;
-        int menuToggleSpeed = 50;
-
-        int userAddFriendNotifDelay = 1500;
-        int friendOfflineNotifDelay = 1000;
-        int serverOfflineNotidDelay = 1000;
 
         #region Scrolls
 
@@ -111,6 +128,15 @@ namespace DesktopClient
 
         #endregion
 
+        #region Hub
+
+        HubConnection hub;
+        IHubProxy hubProxy;
+
+        #endregion 
+
+        Point windowPosition;
+
         Dictionary<PictureBox, Panel> activeSideBar = new Dictionary<PictureBox, Panel>();
 
         Dictionary<UserStatus, string> statuses = new Dictionary<UserStatus, string>
@@ -118,16 +144,10 @@ namespace DesktopClient
             { UserStatus.Anonymous, "Anonymous"},
         };
 
-        int messagePanelMaxWidth = 250;
 
         int chatPanelCurrentWidth;
 
-
-
         event Action<int> moveIncomingMessages;
-
-        HubConnection hub;
-        IHubProxy hubProxy;
 
         #endregion
 
@@ -135,13 +155,10 @@ namespace DesktopClient
         public MainForm()
         {
             InitializeComponent();
-            friendScroll = new CustomScrollBar(FriendsListPanel, FriendsScroll, 3);
             
-
-            StartUserSettings();
+            
             ControlsSettings();
-
-            chatScroll = new CustomScrollBar(ChatMessagesPanel, ChatScroll, 10);
+            StartUserSettings();
         }
 
         
@@ -155,6 +172,8 @@ namespace DesktopClient
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             DisconnectFromHub();
+            SaveUserMessages();
+            SaveFriendsWithNotReadedMsg();
         }
 
         private void ControlsSettings()
@@ -168,9 +187,13 @@ namespace DesktopClient
             // profile panel
             ProfilepanelAvatarPic.Left = (menuNormalWidth - ProfilepanelAvatarPic.Width) / 2;
 
-            // chat exit panel
-            
+            // scrolls
+            friendScroll = new CustomScrollBar(FriendsListPanel, FriendsScroll, 3);
+            chatScroll = new CustomScrollBar(ChatMessagesPanel, ChatScroll, 10);
 
+            addFriendSound = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + @"Resources\addFriendSound.wav");
+            
+            LoadFriendsWithNotReadedMsg();
         }
 
 
@@ -574,6 +597,12 @@ namespace DesktopClient
             var p = new Panel();
             var but = new ButtonWithDoubleClick();
             var picBox = new PictureBox();
+            var statPanel = new Panel();
+
+            p.SuspendLayout();
+            but.SuspendLayout();
+            picBox.SuspendLayout();
+            statPanel.SuspendLayout();
 
             // custom panel
             p.Name = $"{name}_friendPanel";
@@ -589,6 +618,8 @@ namespace DesktopClient
             picBox.SizeMode = PictureBoxSizeMode.StretchImage;
 
             // custom button
+            but.Controls.Add(statPanel);
+            but.Name = $"{name}_friendButtonn";
             but.FlatAppearance.BorderSize = 0;
             but.FlatAppearance.MouseDownBackColor = Color.Transparent;
             but.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -605,8 +636,20 @@ namespace DesktopClient
             but.DoubleClick += (object sender, EventArgs e) =>
             {
                 ChatOpen(but.Text);
-
             };
+
+            // new message status panel
+            statPanel.Name = $"{name}_newMessageStatus";
+            statPanel.Width = 5;
+            statPanel.Dock = DockStyle.Right;
+            statPanel.Margin = new Padding(0,0,0,0);
+            statPanel.BackColor = newMessageNotificationColor;
+            statPanel.Visible = false;
+
+            statPanel.ResumeLayout();
+            picBox.ResumeLayout();
+            but.ResumeLayout();
+            p.ResumeLayout();
 
             return p;
         }
@@ -804,19 +847,22 @@ namespace DesktopClient
                 {
                     result = await webClient.DownloadStringTaskAsync(uri);
                 }
-                catch(WebException)
+                catch(WebException e)
                 {
+                    UserNotLogined();
+                    if ((e.Status == WebExceptionStatus.ProtocolError) && (e.Response != null))
+                    {
+                        if(((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            return ConnectStatus.Fail;
+                        }
+                    }
                     return ConnectStatus.ServiceNotAvailable;
                 }
             }
-            if (!String.IsNullOrEmpty(result))
-            {
-                userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
-                UserLogined(login, password);
-                return ConnectStatus.Ok;
-            }
-            UserNotLogined();
-            return ConnectStatus.Fail;
+            userToken = JsonConvert.DeserializeObject<TokenService.Token>(result).Key;
+            UserLogined(login, password);
+            return ConnectStatus.Ok;
         }
 
         public async Task<ConnectStatus> RegisterUser(string login, string password)
@@ -849,15 +895,16 @@ namespace DesktopClient
         private async Task<ConnectStatus> AddFriend(string name)
         {
             bool result;
-            string url = Properties.Settings.Default.userServiceUrl + Properties.Settings.Default.addFriendPath + name;
+            string url = Properties.Settings.Default.userServiceUrl + Properties.Settings.Default.addFriendPath;
 
             using (WebClient webClient = new WebClient())
             {
                 AddAuthorizationHeader(webClient, userLogin, userPassword);
 
+                webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
                 try
                 {
-                    var str = await webClient.DownloadStringTaskAsync(url);
+                    var str = await webClient.UploadStringTaskAsync(url, "POST", JsonConvert.SerializeObject(name));
                     result = Boolean.Parse(str);
                 }
                 catch (WebException)
@@ -919,8 +966,6 @@ namespace DesktopClient
 
         #endregion
 
-
-
         #region ChatBox
 
         private void ChatOpen(string friendName)
@@ -933,6 +978,8 @@ namespace DesktopClient
 
             // close friend panel
             ToggleSideBarMenuButton(sideBarFriends, FriendsPanel);
+
+            RemoveMessageNotification(friendName);
         }
 
         private void ChatSendMessageButton_Click(object sender, EventArgs e)
@@ -998,15 +1045,20 @@ namespace DesktopClient
             foreach (var msg in Messages.GetMessages(userLogin, friendName))
             {
                 if(msg.IsReceived == 0)
-                {
                     ChatOutcomingMessageAddPanel(msg.Message);
-                }
                 else
-                {
                     ChatIncomingMessageAddPanel(msg.Message);
+            }
+            foreach (var msg in userNewMessages)
+            {
+                if (msg.Friend == friendName)
+                {
+                    if (msg.IsReceived == 0)
+                        ChatOutcomingMessageAddPanel(msg.Message);
+                    else
+                        ChatIncomingMessageAddPanel(msg.Message);
                 }
             }
-            
         }
 
         private void FriendOfflineTimer_Tick(object sender, EventArgs e)
@@ -1015,6 +1067,16 @@ namespace DesktopClient
             FriendOfflineTimer.Stop();
         }
 
+        private void AddNewMessage(MessageFormat newMsg)
+        {
+            userNewMessages.Add(newMsg);
+        }
+
+        private void SaveUserMessages()
+        {
+            Messages.SaveMessages(userLogin, userNewMessages);
+        }
+        
         #endregion
 
         #region Scroll boxes
@@ -1026,6 +1088,8 @@ namespace DesktopClient
             foreach (var f in userFriends)
             {
                 friendScroll.AddNewItem(Generate_FriendPanel(f));
+                if (userFriendsTheirMsgNotReaded.Contains(f))
+                    AddNewMessageNotification(f);
             }
             friendScroll.MoveStart();
         }
@@ -1119,8 +1183,18 @@ namespace DesktopClient
             {
                 if (userFriends.Contains(fromFriend))
                 {
-                    Messages.AddMessage(userLogin, fromFriend, text, true);
-                    ChatIncomingMessageAddPanel(text);
+                    // add new msg notification
+                    if((ChatPanel.Visible != true) || (ChatFriendName.Text != fromFriend))
+                    {
+                        AddNewMessageNotification(fromFriend);
+                    }
+                    else
+                    {
+                        ChatIncomingMessageAddPanel(text);
+                    }
+                    var msg = new MessageFormat { Friend = fromFriend, Message = text,
+                                                  Data = DateTime.Now.Ticks, IsReceived = 1 };
+                    AddNewMessage(msg);
                 }
             }));
         }
@@ -1130,7 +1204,9 @@ namespace DesktopClient
             if(await hubProxy.Invoke<bool>("SendMessage", text, friendName))
             {
                 ChatOutcomingMessageAddPanel(text);
-                Messages.AddMessage(userLogin, friendName, text, false);
+                var msg = new MessageFormat { Friend = friendName, Message = text,
+                                              Data = DateTime.Now.Ticks, IsReceived = 0  };
+                AddNewMessage(msg);
             }
             else
             {
@@ -1139,6 +1215,45 @@ namespace DesktopClient
                 ChatFriendOfflinePanel.Visible = true;
                 FriendOfflineTimer.Start();
             }
+        }
+
+        #endregion
+
+        #region Message Notifications
+
+        private void AddNewMessageNotification(string friendName)
+        {
+            var p = FriendsListPanel.Controls.Find($"{friendName}_friendPanel", false).FirstOrDefault();
+            var b = p.Controls.Find($"{friendName}_friendButtonn", false).FirstOrDefault();
+            b.Controls.Find($"{friendName}_newMessageStatus", false).FirstOrDefault().Visible = true;
+            userFriendsTheirMsgNotReaded.Add(friendName);
+            addFriendSound.Play();
+        }
+
+        private void RemoveMessageNotification(string friendName)
+        {
+            var p = FriendsListPanel.Controls.Find($"{friendName}_friendPanel", false).FirstOrDefault();
+            var b = p.Controls.Find($"{friendName}_friendButtonn", false).FirstOrDefault();
+            b.Controls.Find($"{friendName}_newMessageStatus", false).FirstOrDefault().Visible = false;
+            userFriendsTheirMsgNotReaded.Remove(friendName);
+        }
+
+        private void SaveFriendsWithNotReadedMsg()
+        {
+            var col = new System.Collections.Specialized.StringCollection();
+            col.AddRange(userFriendsTheirMsgNotReaded.ToArray());
+
+            Properties.Settings.Default.friendsWithNotReadedMsg = col;
+            Properties.Settings.Default.Save();
+        }
+
+        private void LoadFriendsWithNotReadedMsg()
+        {
+            var col = Properties.Settings.Default.friendsWithNotReadedMsg;
+            if (col == null)
+                userFriendsTheirMsgNotReaded = new HashSet<string>();
+            else
+                userFriendsTheirMsgNotReaded = new HashSet<string>(col.Cast<string>().ToList());
         }
 
         #endregion

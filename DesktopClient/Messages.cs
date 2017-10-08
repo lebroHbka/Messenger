@@ -36,14 +36,21 @@ namespace DesktopClient
             }
         }
 
-        public static void AddMessage(string userName, string friendName, string text, bool isReceived)
+        public static void SaveMessages(string userName, IEnumerable<MessageFormat> msgs)
         {
-            var _isReceived = isReceived ? 1 : 0;
-            string command = $"insert into {userName} (friend, message, data, isReceived) values " +
-                                                    $"('{friendName}','{text}',{DateTime.Now.Ticks},{_isReceived})";
             using (var db = new SQLiteConnection(connectionString))
             {
-                db.CreateCommand(command).ExecuteNonQuery();
+                StringBuilder command = new StringBuilder();
+                db.BeginTransaction();
+
+                foreach (var m in msgs)
+                {
+                    command.Append($"insert into {userName} (friend, message, data, isReceived) values " +
+                                                    $"('{m.Friend}','{m.Message}',{m.Data},{m.IsReceived})");
+                    db.CreateCommand(command.ToString()).ExecuteNonQuery();
+                    command.Clear();
+                }
+                db.Commit();
             }
         }
 

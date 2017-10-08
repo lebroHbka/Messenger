@@ -67,7 +67,7 @@ namespace DesktopClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/user/addfriend=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/user/addfriend")]
         public string addFriendPath {
             get {
                 return ((string)(this["addFriendPath"]));
@@ -116,6 +116,17 @@ namespace DesktopClient.Properties {
         public string signalrHubName {
             get {
                 return ((string)(this["signalrHubName"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection friendsWithNotReadedMsg {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["friendsWithNotReadedMsg"]));
+            }
+            set {
+                this["friendsWithNotReadedMsg"] = value;
             }
         }
     }

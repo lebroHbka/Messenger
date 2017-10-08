@@ -3,15 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-using System.Configuration;
-using System.Threading;
-using System.Data;
 using System.Linq;
 using System.ServiceModel.Web;
 using System.Net;
 using System.Text;
-using Serilog;
-using Serilog.Core;
 using SQLite;
 using System.Collections.Generic;
 
@@ -22,18 +17,18 @@ namespace MessagesService
 
         #region Vars
         static string secretKey;
-        static Logger logger;
         static string connectionString;
 
         #endregion
 
         #region Constructors
+
         static UserService()
         {
             secretKey = Properties.Settings.Default.SecretKey;
-            logger = new LoggerConfiguration().WriteTo.RollingFile(@"C:\inetpub\wwwroot\RestService\App_Data\log-{Date}.txt").CreateLogger();
             connectionString = AppDomain.CurrentDomain.BaseDirectory + Properties.Settings.Default.BDPath;
         }
+        
         #endregion
 
 

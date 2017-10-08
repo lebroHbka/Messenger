@@ -27,10 +27,11 @@ namespace MessagesService
         Token SignUp(User info);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/user/addfriend={name}",
-                RequestFormat = WebMessageFormat.Json,
-                ResponseFormat = WebMessageFormat.Json,
-                BodyStyle = WebMessageBodyStyle.Bare)]
+        [WebInvoke(Method = "POST",
+                   UriTemplate = "/user/addfriend",
+                   RequestFormat = WebMessageFormat.Json,
+                   ResponseFormat = WebMessageFormat.Json,
+                   BodyStyle = WebMessageBodyStyle.Bare)]
         bool AddFriend(string name);
 
         [OperationContract]

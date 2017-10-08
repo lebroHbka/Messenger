@@ -170,6 +170,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\addFriendSound.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\CommentsDB.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

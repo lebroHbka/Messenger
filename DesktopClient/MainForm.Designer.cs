@@ -315,7 +315,7 @@
             this.AddFriendName.DetectUrls = false;
             this.AddFriendName.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddFriendName.ForeColor = System.Drawing.Color.White;
-            this.AddFriendName.Location = new System.Drawing.Point(-81, 0);
+            this.AddFriendName.Location = new System.Drawing.Point(-82, 0);
             this.AddFriendName.Margin = new System.Windows.Forms.Padding(0);
             this.AddFriendName.MaxLength = 10;
             this.AddFriendName.Multiline = false;
